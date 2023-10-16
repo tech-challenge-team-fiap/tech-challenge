@@ -57,9 +57,8 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
   liquibase:
     contexts: ${spring.profiles.active}
-    change-log: 'classpath:/db/config/db.master.xml'
+    change-log: 'classpath:/db/changelog/db.master.xml'
 logging:
   level:
     root: INFO
-    com.matera: INFO
-    org.hibernate.engine.internal.StatisticalLoggingSessionEventListener: OFF
+    br.com.fiap: INFO
