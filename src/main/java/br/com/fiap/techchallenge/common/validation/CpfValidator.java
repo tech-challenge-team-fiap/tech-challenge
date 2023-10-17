@@ -47,12 +47,5 @@ public class CpfValidator {
         return cpf.charAt(10) - '0' == secondDigit;
     }
 
-    public static void main(String[] args) {
-        String cpf = "123.456.789-09";
-        if (isValidCpf(cpf)) {
-            System.out.println("Valid CPF!");
-        } else {
-            System.out.println("Invalid CPF!");
-        }
-    }
+
 }
