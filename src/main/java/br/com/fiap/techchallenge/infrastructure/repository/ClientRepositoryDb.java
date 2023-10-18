@@ -40,6 +40,15 @@ public class ClientRepositoryDb {
         this.dateRegister = clientFormDto.getDateRegister();
     }
 
+    public void updateFromDto(ClientFormDto clientFormDto) {
+        // Assuming Client class has these setters
+        this.setName(clientFormDto.getName());
+        this.setEmail(clientFormDto.getEmail());
+        this.setPhone(clientFormDto.getPhone());
+        this.setCpf(clientFormDto.getCpf());
+        // Add more fields as needed
+    }
+
     public ClientRepositoryDb(Client client) {
         this.name = client.getName();
         this.cpf = client.getCpf();
@@ -47,6 +56,18 @@ public class ClientRepositoryDb {
         this.phone = client.getPhone();
         this.dateRegister = client.getDateRegister();
     }
+
+    private void setCpf(String cpf) {
+    }
+    private void setPhone(String phone) {
+    }
+
+    private void setEmail(String email) {
+    }
+
+    private void setName(String name) {
+    }
+
 
     public String getName() {
         return name;

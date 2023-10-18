@@ -46,6 +46,18 @@ public class ClientGateway {
         }
     }
 
+    public ResponseEntity<Integer> update(ClientRepositoryDb client) {
+        // Assuming ClientGateway has a method to update a client
+        clientRepository.save(client);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Integer> delete(ClientRepositoryDb client) {
+        // Assuming ClientGateway has a method to delete a client
+        clientRepository.delete(client);
+        return ResponseEntity.ok().build();
+    }
+
     public ResponseEntity findAll() {
         return new ResponseEntity<>(clientRepository.findAll(), HttpStatus.OK);
     }

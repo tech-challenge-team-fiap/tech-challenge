@@ -10,21 +10,21 @@ class ValidatorsTest {
 
     @Test
     void shouldValidateCpf() {
-        assertTrue(CpfValidator.isValidCpf("valid cpf"));
-        assertFalse(CpfValidator.isValidCpf("invalid cpf"));
+        assertTrue(CpfValidator.isValidCpf("550.705.870-99"));
+        assertFalse(CpfValidator.isValidCpf("530.705.870-99"));
     }
 
 
     @Test
     void shouldValidateEmail() {
-        assertTrue(EmailValidator.isValidEmail("valid email"));
-        assertFalse(EmailValidator.isValidEmail("invalid email"));
+        assertTrue(EmailValidator.isValidEmail("teste@hotmail.com"));
+        assertFalse(EmailValidator.isValidEmail("testehotmail.com"));
     }
 
 
     @Test
     void shouldValidatePhoneNumber() {
         assertTrue(PhoneNumberValidator.isValidPhoneNumber("+5511987654321"));
-        assertFalse(PhoneNumberValidator.isValidPhoneNumber("invalid phone number"));
+        assertFalse(PhoneNumberValidator.isValidPhoneNumber("11987654321"));
     }
 }
