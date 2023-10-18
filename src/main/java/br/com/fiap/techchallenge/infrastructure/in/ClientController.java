@@ -25,7 +25,7 @@ public class ClientController {
         this.gateway = clientGateway;
     }
 
-    @PostMapping(path = "/client/registr")
+    @PostMapping(path = "/client/register")
     @Transactional
     public ResponseEntity<Integer> create(@RequestBody ClientFormDto clientFormDto) {
         return registerNewClientUseCase.register(clientFormDto);

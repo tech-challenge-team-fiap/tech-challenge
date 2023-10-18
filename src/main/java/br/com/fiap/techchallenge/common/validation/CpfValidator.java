@@ -2,50 +2,55 @@ package br.com.fiap.techchallenge.common.validation;
 
 public class CpfValidator {
 
-    private static final int CPF_LENGTH = 11;
-
     public static boolean isValidCpf(String cpf) {
+        cpf = cpf.replace(".", "");
+        cpf = cpf.replace("-", "");
 
-        if (cpf == null) {
+        try {
+            Long.parseLong(cpf);
+        } catch (NumberFormatException e) {
             return false;
         }
 
-        cpf = cpf.replaceAll("[^0-9]", "");
+        int d1, d2;
+        int digito1, digito2, resto;
+        int digitoCPF;
+        String nDigResult;
 
-        if (cpf.length() != CPF_LENGTH || cpf.matches(cpf.charAt(0) + "{" + CPF_LENGTH + "}")) {
-            return false;
-        }
+        d1 = d2 = 0;
+        digito1 = digito2 = resto = 0;
 
-        cpf = cpf.replaceAll("[^0-9]", "");
+        for (int nCount = 1; nCount < cpf.length() - 1; nCount++) {
+            digitoCPF = Integer.valueOf(cpf.substring(nCount - 1, nCount)).intValue();
 
-        if (cpf.length() != 11) {
-            return false;
-        }
+            d1 = d1 + (11 - nCount) * digitoCPF;
 
-        int sum = 0;
-        for (int i = 0; i < 9; i++) {
-            sum += (cpf.charAt(i) - '0') * (10 - i);
+            d2 = d2 + (12 - nCount) * digitoCPF;
         }
-        int firstDigit = 11 - (sum % 11);
-        if (firstDigit > 9) {
-            firstDigit = 0;
-        }
+        ;
 
-        if (cpf.charAt(9) - '0' != firstDigit) {
-            return false;
-        }
+        resto = (d1 % 11);
 
-        sum = 0;
-        for (int i = 0; i < 10; i++) {
-            sum += (cpf.charAt(i) - '0') * (11 - i);
-        }
-        int secondDigit = 11 - (sum % 11);
-        if (secondDigit > 9) {
-            secondDigit = 0;
-        }
 
-        return cpf.charAt(10) - '0' == secondDigit;
+        if (resto < 2)
+            digito1 = 0;
+        else
+            digito1 = 11 - resto;
+
+        d2 += 2 * digito1;
+
+        resto = (d2 % 11);
+
+        if (resto < 2)
+            digito2 = 0;
+        else
+            digito2 = 11 - resto;
+
+        String nDigVerific = cpf.substring(cpf.length() - 2, cpf.length());
+
+        nDigResult = String.valueOf(digito1) + String.valueOf(digito2);
+        
+        return nDigVerific.equals(nDigResult);
     }
-
-
 }
+

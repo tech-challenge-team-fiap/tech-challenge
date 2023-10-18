@@ -35,4 +35,14 @@ public class ClientFormDto {
     public String getDateRegister() {
         return dateRegister;
     }
+
+
+    public void setCpf(String validCpf) {
+    }
+
+    public void setEmail(String validEmail) {
+    }
+
+    public void setPhoneNumber(String s) {
+    }
 }
