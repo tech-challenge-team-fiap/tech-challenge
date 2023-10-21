@@ -1,4 +1,4 @@
-package br.com.fiap.techchallenge.adapter.driven.entities.useCase;
+package br.com.fiap.techchallenge.adapter.driven.entities.useCase.client;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
