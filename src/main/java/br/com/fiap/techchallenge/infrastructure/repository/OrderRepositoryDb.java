@@ -26,7 +26,7 @@ public class OrderRepositoryDb {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private ClientRepositoryDb client;
 
@@ -52,7 +52,7 @@ public class OrderRepositoryDb {
     @CreationTimestamp
     private Date dateLastUpdate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "ORDER_PRODUCT",
             joinColumns = @JoinColumn(name = "order_id"),

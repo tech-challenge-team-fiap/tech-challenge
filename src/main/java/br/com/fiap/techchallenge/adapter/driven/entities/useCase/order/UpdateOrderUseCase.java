@@ -48,7 +48,7 @@ public class UpdateOrderUseCase {
             sendNotificationToClient(numberOrder, StatusOrder.RECEIVED );
 
             // Send order to queue IN_PREPARATION
-            logger.info("[OrderQueue] Pedido %s enviado para a fila" , numberOrder);
+            logger.info("[OrderQueue] Enviado para a fila o pedido de número: " + numberOrder);
             OrderQueueRepositoryDB queue = new OrderQueueRepositoryDB(
                     numberOrder,
                     StatusOrder.IN_PREPARATION,
@@ -77,7 +77,7 @@ public class UpdateOrderUseCase {
     }
 
     private void sendNotificationToClient(String numberOrder, StatusOrder status) {
-        String msg = "O pedido de número: " + numberOrder +" - Status: "+ status + ".";
+        String msg = "[Notification] O pedido de número: " + numberOrder +" - Status: "+ status + ".";
         logger.info(msg);
 
         NotificationRepositoryDB notification = new NotificationRepositoryDB( numberOrder, msg,  status, new Date() );
