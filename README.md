@@ -27,3 +27,13 @@ In this file, the following services have been defined:
 
 Please review the tags of the used images and set them to the same as you're running in production.
 
+# Docker Compose
+
+### Pré requisitos
+Docker version: 20.10.9+
+Docker compose: v2+
+
+1. Buildar o projeto utlizando o comando `mvn package -Pdocker`.
+2. Executar o comando na pasta do projeto `docker compose up`.
+
+Obs: Toda vez que roda do commando `docker compose up` ele cria uma imagem, se realizar alterações precisa apagar a imagem utilizando o commando `docker rmi tech-challenge-spring-app`

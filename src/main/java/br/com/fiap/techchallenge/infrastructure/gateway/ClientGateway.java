@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.infrastructure.gateway;
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ClientGateway {
         this.clientRepository = clientRepository;
     }
 
-    public ResponseEntity<Integer> register(Client client) {
+    public ResponseEntity<UUID> register(Client client) {
         try {
             return Optional.ofNullable(client.getCpf())
                     .filter(cpf -> !cpf.isEmpty())

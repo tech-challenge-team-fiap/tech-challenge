@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.Register
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RemoveClientUseCase;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import jakarta.transaction.Transactional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +29,15 @@ public class ClientController {
         this.gateway = clientGateway;
     }
 
-    @PostMapping(path = "register")
+    @PostMapping()
     @Transactional
-    public ResponseEntity<Integer> create(@RequestBody ClientFormDto clientFormDto) {
+    public ResponseEntity<UUID> create(@RequestBody ClientFormDto clientFormDto) {
         return registerNewClientUseCase.register(clientFormDto);
     }
 
-    @PutMapping("/{cpf}")
-    public ResponseEntity<Integer> editClient(@PathVariable String cpf, @RequestBody ClientFormDto clientFormDto) {
-        clientFormDto.setCpf(cpf);
+    @PutMapping()
+    public ResponseEntity<Integer> editClient(@RequestBody ClientFormDto clientFormDto) {
+        clientFormDto.setCpf(clientFormDto.getCpf());
         return editClientUseCase.edit(clientFormDto);
     }
 

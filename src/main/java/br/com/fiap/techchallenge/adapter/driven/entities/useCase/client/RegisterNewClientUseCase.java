@@ -8,6 +8,7 @@ import br.com.fiap.techchallenge.common.validation.EmailValidator;
 import br.com.fiap.techchallenge.common.validation.PhoneNumberValidator;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class RegisterNewClientUseCase {
         this.clientRepository = clientRepository;
     }
 
-    public ResponseEntity<Integer> register(final ClientFormDto clientFormDto) {
+    public ResponseEntity<UUID> register(final ClientFormDto clientFormDto) {
 
         validateCpf(clientFormDto.getCpf());
         validateEmail(clientFormDto.getEmail());

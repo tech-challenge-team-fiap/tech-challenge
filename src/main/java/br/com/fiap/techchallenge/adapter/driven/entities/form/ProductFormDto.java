@@ -2,6 +2,7 @@ package br.com.fiap.techchallenge.adapter.driven.entities.form;
 
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,9 +25,9 @@ public class ProductFormDto {
 
     private TypeStatus typeStatus;
 
-    private Date dateRegister;
+    private LocalDateTime dateRegister;
 
-    public ProductFormDto(String name, String description, Integer quantity, TypeProduct typeProduct, BigDecimal price, TypeStatus typeStatus, Date dateRegister) {
+    public ProductFormDto(String name, String description, Integer quantity, TypeProduct typeProduct, BigDecimal price, TypeStatus typeStatus, LocalDateTime dateRegister) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;

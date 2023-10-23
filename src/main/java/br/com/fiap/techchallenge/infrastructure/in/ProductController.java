@@ -11,6 +11,7 @@ import br.com.fiap.techchallenge.infrastructure.gateway.ProductGateway;
 import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
 import jakarta.transaction.Transactional;
 import jakarta.websocket.server.PathParam;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,19 +35,19 @@ public class ProductController {
         this.removeProductUseCase = removeProductUseCase;
     }
 
-    @PostMapping(path = "register")
+    @PostMapping()
     @Transactional
     public ResponseEntity<ProductRepositoryDb> create(@RequestBody ProductFormDto productFormDto) {
         return registerNewProductUseCase.register(productFormDto);
     }
 
-    @PutMapping(path = "update")
+    @PutMapping()
     public ResponseEntity<Integer> edit(@RequestBody ProductEditFormDto product) {
         return editProductUseCase.edit(product);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Integer> remove(@PathParam("id") Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> remove(@PathVariable UUID id) {
         return removeProductUseCase.remove(id);
     }
 
