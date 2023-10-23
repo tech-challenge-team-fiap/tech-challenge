@@ -1,9 +1,9 @@
 package br.com.fiap.techchallenge.infrastructure.in;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.EditClientUseCase;
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.RegisterNewClientUseCase;
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.RemoveClientUseCase;
+import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.EditClientUseCase;
+import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RegisterNewClientUseCase;
+import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RemoveClientUseCase;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

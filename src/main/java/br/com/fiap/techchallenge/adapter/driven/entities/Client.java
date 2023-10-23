@@ -5,7 +5,6 @@ import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
 
 public class Client {
 
-
     private String name;
     private String cpf;
     private String email;

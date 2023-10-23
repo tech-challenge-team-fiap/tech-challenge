@@ -3,7 +3,7 @@ package br.com.fiap.techchallenge;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.RegisterNewClientUseCase;
+import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RegisterNewClientUseCase;
 import br.com.fiap.techchallenge.common.exception.BaseException;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
