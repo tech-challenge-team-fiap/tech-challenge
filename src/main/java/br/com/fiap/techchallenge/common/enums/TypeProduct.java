@@ -18,6 +18,11 @@ public enum TypeProduct {
     /**
      * ACOMPANHAMENTO
      */
-    SNACK_ACCOMPANIMENT;
+    SNACK_ACCOMPANIMENT,
+
+    /**
+     * SOBREMESA
+     */
+    DESSERT
 
 }

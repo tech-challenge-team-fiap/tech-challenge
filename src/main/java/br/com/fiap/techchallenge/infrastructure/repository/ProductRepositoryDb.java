@@ -31,9 +31,11 @@ public class ProductRepositoryDb {
 
     private BigDecimal price;
 
+    @Column(name="typeStatus", length=250)
     @Enumerated(EnumType.STRING)
     private TypeStatus typeStatus;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
 
     public ProductRepositoryDb(){
