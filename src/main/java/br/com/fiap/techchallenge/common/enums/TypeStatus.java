@@ -5,14 +5,18 @@ import lombok.Setter;
 
 public enum TypeStatus {
 
-    ACTIVE(1),
+    /**
+     * ATIVO
+     */
+    ACTIVE,
 
-    INACTIVE(2);
+    /**
+     * INATIVO
+     */
+    INACTIVE,
 
-    @Getter
-    @Setter
-    private java.lang.Integer code;
-    TypeStatus(java.lang.Integer code){
-        this.code = code;
-    }
+    /**
+     * AGUARDANDO
+     */
+    WAITING
 }
