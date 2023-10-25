@@ -2,6 +2,7 @@ package br.com.fiap.techchallenge.adapter.driven.entities.form;
 
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 @Setter
 public class ProductEditFormDto {
 
-    private Integer id;
+    private UUID id;
     private String name;
 
     private String description;
@@ -27,7 +28,7 @@ public class ProductEditFormDto {
 
     private Date dateRegister;
 
-    public ProductEditFormDto(Integer id , String name, String description, Integer quantity, TypeProduct typeProduct, BigDecimal price, TypeStatus typeStatus, Date dateRegister) {
+    public ProductEditFormDto(UUID id , String name, String description, Integer quantity, TypeProduct typeProduct, BigDecimal price, TypeStatus typeStatus, Date dateRegister) {
         this.id = id;
         this.name = name;
         this.description = description;

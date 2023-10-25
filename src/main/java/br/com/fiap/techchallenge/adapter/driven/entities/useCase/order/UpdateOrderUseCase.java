@@ -10,6 +10,7 @@ import br.com.fiap.techchallenge.infrastructure.out.OrderRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.NotificationRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderQueueRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class UpdateOrderUseCase {
             OrderQueueRepositoryDB queue = new OrderQueueRepositoryDB(
                     numberOrder,
                     StatusOrder.IN_PREPARATION,
-                    new Date()
+                    LocalDateTime.now()
             );
 
             sendNotificationToClient(numberOrder , StatusOrder.IN_PREPARATION);
@@ -61,15 +62,16 @@ public class UpdateOrderUseCase {
         }
 
         if(status.toUpperCase().equals(StatusOrder.READY)){
-            order.setDateLastUpdate(new Date());
+
+            order.setDateLastUpdate(LocalDateTime.now());
             sendNotificationToClient(numberOrder , StatusOrder.READY);
         }
 
         if(status.toUpperCase().equals(StatusOrder.DELIVERED)){
 
-            order.setDateLastUpdate(new Date());
-            order.setDateDelivered(new Date());
 
+            order.setDateLastUpdate(LocalDateTime.now());
+            order.setDateDelivered(LocalDateTime.now());
             sendNotificationToClient(numberOrder , StatusOrder.DELIVERED);
         }
 
@@ -79,8 +81,7 @@ public class UpdateOrderUseCase {
     private void sendNotificationToClient(String numberOrder, StatusOrder status) {
         String msg = "[Notification] O pedido de número: " + numberOrder +" - Status: "+ status + ".";
         logger.info(msg);
-
-        NotificationRepositoryDB notification = new NotificationRepositoryDB( numberOrder, msg,  status, new Date() );
+        NotificationRepositoryDB notification = new NotificationRepositoryDB( numberOrder, msg,  status, LocalDateTime.now() );
         notificationRepository.save(notification);
     }
 }

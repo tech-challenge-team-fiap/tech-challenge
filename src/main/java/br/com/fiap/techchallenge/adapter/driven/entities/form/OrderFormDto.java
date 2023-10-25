@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderFormDto {
 
-    private Integer clientId;
+
+    private UUID clientId;
 
     private PaymentsType paymentsType;
 

@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.adapter.driven.entities;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductFormDto;
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
+import java.time.LocalDateTime;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.FetchType;
@@ -14,7 +15,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -34,7 +34,13 @@ public class Product {
 
     private TypeStatus typeStatus;
 
-    private Date dateRegister;
+    private LocalDateTime dateRegister;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private OrderRepositoryDb order;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)

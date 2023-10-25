@@ -1,6 +1,8 @@
 package br.com.fiap.techchallenge.adapter.driven.entities;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 
 public class Client {
@@ -9,7 +11,7 @@ public class Client {
     private String cpf;
     private String email;
     private String phone;
-    private String dateRegister;
+    private LocalDateTime dateRegister;
 
     public Client() {}
 
@@ -53,11 +55,11 @@ public class Client {
         this.phone = phone;
     }
 
-    public String getDateRegister() {
+    public LocalDateTime getDateRegister() {
         return dateRegister;
     }
 
-    public void setDateRegister(String dateRegister) {
+    public void setDateRegister(LocalDateTime dateRegister) {
         this.dateRegister = dateRegister;
     }
 }

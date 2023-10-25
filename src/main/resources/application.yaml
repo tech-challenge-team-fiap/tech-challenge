@@ -10,47 +10,17 @@ info:
 
 spring:
   datasource:
-    hikari:
-      transaction-isolation: TRANSACTION_READ_COMMITTED
-      auto-commit: false
-      pool-name: ${spring.application.name}-pool
-    name: ${spring.application.name}-ds
-  application:
-    name: '@project.artifactId@'
-  profiles:
-    default: mysql
-  boot:
-    admin:
-      client:
-        enabled: false
-  cloud:
-    kubernetes:
-      enabled: true
-  zipkin:
-    enabled: false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tech-challenge-db?createDatabaseIfNotExist=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&enabledTLSProtocols=TLSv1,TLSv1.1,TLSv1.2
+    username: root
+    password: root
   jpa:
     show-sql: false
     open-in-view: false
     properties:
       hibernate:
-        # disabled while hibernate bug is opened: https://hibernate.atlassian.net/browse/HHH-13280
-        use_sql_comments: false
-        cache:
-          use_second_level_cache: false
-          use_query_cache: false
-        connection:
-          provider_disables_autocommit: true
-        generate_statistics: true
-        globally_quoted_identifiers: true
-        jdbc:
-          time_zone: UTC
-          batch_size: 50
-        order_updates: true
-        order_inserts: true
-      org.hibernate.flushMode: COMMIT
+        dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      connection:
-        provider_disables_autocommit: true
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

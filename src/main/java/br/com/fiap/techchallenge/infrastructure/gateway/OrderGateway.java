@@ -13,6 +13,8 @@ import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderQueueRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,8 @@ public class OrderGateway {
 
     public ResponseEntity<OrderResultFormDto> register(OrderFormDto order, ClientRepositoryDb client) {
         try {
-            List<Integer> productsIds = order.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
+            List<UUID> productsIds = order.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
+
 
             AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
             List<ProductRepositoryDb> products = (List<ProductRepositoryDb>) productRepository.findAllById(productsIds);
@@ -75,7 +78,7 @@ public class OrderGateway {
                     total.get(),
                     PaymentsType.QR_CODE,
                     null,
-                    new Date(),
+                    LocalDateTime.now(),
                     products
             );
 

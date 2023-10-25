@@ -9,9 +9,327 @@
          - short description.
     -->
 
-    <changeSet id="20231002220700" author="TJOLO">
-        <createTable tableName="TECH_CHALLENGE_PERSON">
-            <column name="ID" type="INT"/>
+    <property name="uuidType" value="CHAR(36)"/>
+    <property name="dateTimeType" value="DATETIME(6)"/>
+
+    <changeSet id="20231023180000" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="CLIENT"/>
+            </not>
+        </preConditions>
+        <comment>Creates the CLIENT table</comment>
+        <createTable tableName="CLIENT"
+          remarks="Holds the available client">
+            <column name="ID"
+              type="${uuidType}"
+              remarks="Identifies the given client">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="CLIENT_PK"/>
+            </column>
+            <column name="NAME"
+              type="VARCHAR(256)"
+              remarks="The client name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CPF"
+              type="VARCHAR(14)"
+              remarks="The client cpf as a natural id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL"
+              type="VARCHAR(256)"
+              remarks="The client email">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE"
+              type="VARCHAR(15)"
+              remarks="The client phone number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_REGISTER"
+              type="${dateTimeType}"
+              remarks="When the client was created within the system">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="20231023180001" author="TJOLO">
+        <preConditions>
+            <not>
+                <indexExists tableName="CLIENT" indexName="CLIENT_CPF_IDX"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="CLIENT" indexName="CLIENT_CPF_IDX" unique="true">
+            <column name="CPF"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20231023180002" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="PRODUCT"/>
+            </not>
+        </preConditions>
+        <comment>Creates the PRODUCT table</comment>
+        <createTable tableName="PRODUCT"
+          remarks="Holds the available product">
+            <column name="ID"
+              type="${uuidType}"
+              remarks="Identifies the given product">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PRODUCT_PK"/>
+            </column>
+            <column name="NAME"
+              type="VARCHAR(256)"
+              remarks="The product name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION"
+              type="VARCHAR(256)"
+              remarks="The product description">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY"
+              type="BIGINT"
+              remarks="The product quantity">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE_PRODUCT"
+              type="VARCHAR(64)"
+              remarks="The product type">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRICE"
+              type="DECIMAL(10,2)"
+              remarks="The product price">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE_STATUS"
+              type="VARCHAR(64)"
+              remarks="The product status">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_REGISTER"
+              type="${dateTimeType}"
+              remarks="When the product was created within the system">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="20231024083800" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="ORDER"/>
+            </not>
+        </preConditions>
+        <comment>Creates the ORDER table</comment>
+        <createTable tableName="ORDER"
+          remarks="Holds the available order">
+            <column name="ID"
+              type="${uuidType}"
+              remarks="Identifies the given order">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="ORDER_PK"/>
+            </column>
+            <column name="CLIENT_ID"
+              type="${uuidType}"
+              remarks="The client order identification">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_NUMBER"
+              type="VARCHAR(256)"
+              remarks="The order number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE"
+              type="DATE"
+              remarks="The order date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_STATUS"
+              type="VARCHAR(64)"
+              remarks="The order status">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TOTAL"
+              type="DECIMAL(10,2)"
+              remarks="The order value total">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_TYPE"
+              type="VARCHAR(64)"
+              remarks="The order payment type">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_ID"
+              type="${uuidType}"
+              remarks="The order payment id reference">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_DELIVERED"
+              type="${dateTimeType}"
+              remarks="The order date delivered">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_AT"
+              type="${dateTimeType}"
+              remarks="The order last updated">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="20231024083801" author="TJOLO">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="ORDER_CLIENT_FK" foreignKeyTableName="ORDER"/>
+            </not>
+        </preConditions>
+        <comment>Creates the foreign keys on the ORDER table</comment>
+        <addForeignKeyConstraint baseTableName="ORDER"
+          baseColumnNames="CLIENT_ID"
+          constraintName="ORDER_CLIENT_FK"
+          referencedTableName="CLIENT"
+          referencedColumnNames="ID"
+          onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="20231024083802" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="ORDER_PRODUCT"/>
+            </not>
+        </preConditions>
+        <comment>Creates the ORDER_PRODUCT table</comment>
+        <createTable tableName="ORDER_PRODUCT"
+          remarks="Holds the available order product">
+            <column name="ORDER_ID"
+              type="${uuidType}"
+              remarks="Identifies the given order">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID"
+              type="${uuidType}"
+              remarks="Identifies the given product">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="20231024083803" author="TJOLO">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="ORDER_PRODUCT_ORDER_FK" foreignKeyTableName="ORDER_PRODUCT"/>
+            </not>
+        </preConditions>
+        <comment>Creates the foreign keys on the ORDER_PRODUCT table</comment>
+        <addForeignKeyConstraint baseTableName="ORDER_PRODUCT"
+          baseColumnNames="ORDER_ID"
+          constraintName="ORDER_PRODUCT_ORDER_FK"
+          referencedTableName="ORDER"
+          referencedColumnNames="ID"
+          onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="20231024083804" author="TJOLO">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="ORDER_PRODUCT_PRODUCT_FK" foreignKeyTableName="ORDER_PRODUCT"/>
+            </not>
+        </preConditions>
+        <comment>Creates the foreign keys on the ORDER_PRODUCT table</comment>
+        <addForeignKeyConstraint baseTableName="ORDER_PRODUCT"
+          baseColumnNames="PRODUCT_ID"
+          constraintName="ORDER_PRODUCT_PRODUCT_FK"
+          referencedTableName="PRODUCT"
+          referencedColumnNames="ID"
+          onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="20231024083805" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="NOTIFICATION"/>
+            </not>
+        </preConditions>
+        <comment>Creates the NOTIFICATION table</comment>
+        <createTable tableName="NOTIFICATION"
+          remarks="Holds the available notification">
+            <column name="ID"
+              type="${uuidType}"
+              remarks="Identifies the given order">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="NOTIFICATION_PK"/>
+            </column>
+            <column name="ORDER_NUMBER"
+              type="VARCHAR(256)"
+              remarks="The order number identifies notification">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGE"
+              type="VARCHAR(256)"
+              remarks="The notification message">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_STATUS"
+              type="VARCHAR(64)"
+              remarks="The order status">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_REGISTER"
+              type="${dateTimeType}"
+              remarks="The order date delivered">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="20231024083806" author="TJOLO">
+        <preConditions>
+            <not>
+                <tableExists tableName="ORDER_QUEUE"/>
+            </not>
+        </preConditions>
+        <comment>Creates the ORDER_QUEUE table</comment>
+        <createTable tableName="ORDER_QUEUE"
+          remarks="Holds the available order queue">
+            <column name="ID"
+              type="${uuidType}"
+              remarks="Identifies the given order">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="ORDER_QUEUE_PK"/>
+            </column>
+            <column name="ORDER_NUMBER"
+              type="VARCHAR(256)"
+              remarks="The order number identifies notification">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_STATUS"
+              type="VARCHAR(64)"
+              remarks="The order status">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_REGISTER"
+              type="${dateTimeType}"
+              remarks="The order date delivered">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci"/>
+        </modifySql>
     </changeSet>
 </databaseChangeLog>

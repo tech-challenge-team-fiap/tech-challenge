@@ -8,6 +8,9 @@ import br.com.fiap.techchallenge.infrastructure.out.OrderRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.NotificationRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderQueueRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
+
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +54,15 @@ public class CronJob {
 
             orderQueueRepository.save(item);
 
-            NotificationRepositoryDB notification = new NotificationRepositoryDB( item.getNumberOrder(), "Finalizado o pedido: "+ item.getNumberOrder(),  StatusOrder.READY, new Date() );
+
+            NotificationRepositoryDB notification = new NotificationRepositoryDB( item.getNumberOrder(), "Finalizado o pedido: "+ item.getNumberOrder(),  StatusOrder.READY, LocalDateTime.now() );
+
             logger.info("[Notificacao] Notificação enviada ao cliente que o pedido esta PRONTO");
             notificationRepository.save(notification);
 
             OrderRepositoryDb order = orderRepository.findByNumberOrder(item.getNumberOrder()).get();
             order.setStatusOrder(StatusOrder.READY);
-            order.setDateLastUpdate(new Date());
+            order.setDateLastUpdate(LocalDateTime.now());
 
             logger.info("[FILA] Pedido Id:" +order.getId() + "/ Numero Pedido: " + order.getNumberOrder() + "/ Status Atual:" + order.getStatusOrder());
             orderRepository.save(order);
