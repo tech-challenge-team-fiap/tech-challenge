@@ -62,15 +62,16 @@ public class UpdateOrderUseCase {
         }
 
         if(status.toUpperCase().equals(StatusOrder.READY)){
+
             order.setDateLastUpdate(LocalDateTime.now());
             sendNotificationToClient(numberOrder , StatusOrder.READY);
         }
 
         if(status.toUpperCase().equals(StatusOrder.DELIVERED)){
 
+
             order.setDateLastUpdate(LocalDateTime.now());
             order.setDateDelivered(LocalDateTime.now());
-
             sendNotificationToClient(numberOrder , StatusOrder.DELIVERED);
         }
 
@@ -80,7 +81,6 @@ public class UpdateOrderUseCase {
     private void sendNotificationToClient(String numberOrder, StatusOrder status) {
         String msg = "[Notification] O pedido de número: " + numberOrder +" - Status: "+ status + ".";
         logger.info(msg);
-
         NotificationRepositoryDB notification = new NotificationRepositoryDB( numberOrder, msg,  status, LocalDateTime.now() );
         notificationRepository.save(notification);
     }

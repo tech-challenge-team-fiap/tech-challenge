@@ -47,6 +47,7 @@ public class OrderGateway {
         try {
             List<UUID> productsIds = order.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
 
+
             AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
             List<ProductRepositoryDb> products = (List<ProductRepositoryDb>) productRepository.findAllById(productsIds);
 

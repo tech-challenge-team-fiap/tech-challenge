@@ -89,6 +89,7 @@ public class OrderRepositoryDb {
     }
 
     public OrderRepositoryDb(ClientRepositoryDb client, String numberOrder, Date date, StatusOrder statusOrder, BigDecimal total, PaymentsType paymentsType, LocalDateTime dateDelivered, LocalDateTime dateLastUpdate, List<ProductRepositoryDb> products) {
+
         this.client = client;
         this.numberOrder = numberOrder;
         this.date = date;

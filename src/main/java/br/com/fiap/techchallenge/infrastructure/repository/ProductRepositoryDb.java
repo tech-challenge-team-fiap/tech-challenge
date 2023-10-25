@@ -62,6 +62,7 @@ public class ProductRepositoryDb {
     private BigDecimal price;
 
     @Column(name = "TYPE_STATUS")
+
     @Enumerated(EnumType.STRING)
     @EqualsAndHashCode.Exclude
     private TypeStatus typeStatus;
@@ -69,6 +70,7 @@ public class ProductRepositoryDb {
     @Column(name = "DATE_REGISTER")
     @EqualsAndHashCode.Exclude
     private LocalDateTime dateRegister;
+
 
     @NotNull
     private static UUID nextId() {
