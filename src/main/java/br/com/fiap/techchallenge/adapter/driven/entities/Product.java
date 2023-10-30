@@ -43,12 +43,6 @@ public class Product {
     @JsonIgnore
     private OrderRepositoryDb order;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private OrderRepositoryDb order;
-
     public Product() {}
 
     public Product(ProductFormDto productFormDto) {
