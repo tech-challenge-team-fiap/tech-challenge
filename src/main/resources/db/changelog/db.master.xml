@@ -175,7 +175,7 @@
             <column name="DATE_DELIVERED"
               type="${dateTimeType}"
               remarks="The order date delivered">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="UPDATED_AT"
               type="${dateTimeType}"

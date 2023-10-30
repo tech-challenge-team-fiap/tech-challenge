@@ -1,6 +1,9 @@
 package br.com.fiap.techchallenge.infrastructure.gateway;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
+import br.com.fiap.techchallenge.common.exception.client.ClientNotFoundException;
+import br.com.fiap.techchallenge.common.exception.client.InvalidClientProcessException;
+import br.com.fiap.techchallenge.common.utils.ValidCPF;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
 import java.util.UUID;
@@ -36,7 +39,7 @@ public class ClientGateway {
                         return ResponseEntity.ok(existingClient.getId());
                     })
                     .orElseGet(() -> {
-                        ClientRepositoryDb clientRepositoryDb = new ClientRepositoryDb(client);
+                        ClientRepositoryDb clientRepositoryDb = client.build();
                         clientRepository.save(clientRepositoryDb);
                         logger.info("Customer registered successfully");
                         return ResponseEntity.ok(clientRepositoryDb.getId());
@@ -61,5 +64,16 @@ public class ClientGateway {
 
     public ResponseEntity findAll() {
         return new ResponseEntity<>(clientRepository.findAll(), HttpStatus.OK);
+    }
+
+    public ResponseEntity findByCpf(String cpf) throws InvalidClientProcessException {
+        ValidCPF.validateCpf(cpf);
+
+        Optional<ClientRepositoryDb> client = clientRepository.findByCpf(cpf);
+        if (client.isPresent()) {
+            return new ResponseEntity<>(clientRepository.findByCpf(cpf), HttpStatus.OK);
+        } else {
+            throw new ClientNotFoundException(cpf);
+        }
     }
 }

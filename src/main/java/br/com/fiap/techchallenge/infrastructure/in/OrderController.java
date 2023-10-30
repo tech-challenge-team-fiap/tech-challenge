@@ -33,21 +33,21 @@ public class OrderController {
         this.gateway = gateway;
     }
 
-    @PostMapping(path = "register")
+    @PostMapping()
     @Transactional
     public ResponseEntity<OrderResultFormDto> create(@RequestBody OrderFormDto orderFormDto) {
         return registerNewOrderUseCase.register(orderFormDto);
     }
 
-    @PutMapping(path = "update")
+    @PutMapping()
     public ResponseEntity<OrderResultFormDto> update(@PathParam("numberOrder") String numberOrder, @PathParam("status") String status) {
         return updateOrderUseCase.update(numberOrder, status);
     }
 
-    @GetMapping(path = "all")
+    @GetMapping("/{status}")
     @Transactional
     @JsonIgnore
-    public ResponseEntity<List<OrderRepositoryDb>> findAll(@PathParam("status") String status) {
+    public ResponseEntity<List<OrderRepositoryDb>> findAll(@PathVariable("status") String status) {
         return gateway.findAll(status);
     }
 

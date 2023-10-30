@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.adapter.driven.entities;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductFormDto;
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
+import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
 import java.time.LocalDateTime;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,5 +59,17 @@ public class Product {
         this.price = productFormDto.getPrice();
         this.typeStatus = productFormDto.getTypeStatus();
         this.dateRegister = productFormDto.getDateRegister();
+    }
+
+    public ProductRepositoryDb build() {
+        return ProductRepositoryDb.builder()
+                                  .name(getName())
+                                  .description(getDescription())
+                                  .quantity(getQuantity())
+                                  .typeProduct(getTypeProduct())
+                                  .price(getPrice())
+                                  .typeStatus(getTypeStatus())
+                                  .dateRegister(getDateRegister())
+                                  .build();
     }
 }

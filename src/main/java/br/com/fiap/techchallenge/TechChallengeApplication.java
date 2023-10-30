@@ -8,7 +8,6 @@ public class TechChallengeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TechChallengeApplication.class, args);
-		System.out.println("HELLO WORLD");
 	}
 
 }

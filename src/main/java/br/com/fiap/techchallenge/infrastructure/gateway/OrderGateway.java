@@ -1,10 +1,12 @@
 package br.com.fiap.techchallenge.infrastructure.gateway;
 
+import br.com.fiap.techchallenge.adapter.driven.entities.Order;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderResultFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductOrderFormDto;
 import br.com.fiap.techchallenge.common.enums.PaymentsType;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
+import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.exception.BaseException;
 import br.com.fiap.techchallenge.common.utils.NumberOrderGenerator;
 import br.com.fiap.techchallenge.infrastructure.out.OrderRepository;
@@ -43,10 +45,9 @@ public class OrderGateway {
         this.productRepository = productRepository;
     }
 
-    public ResponseEntity<OrderResultFormDto> register(OrderFormDto order, ClientRepositoryDb client) {
+    public ResponseEntity<OrderResultFormDto> register(OrderFormDto orderFormDto, ClientRepositoryDb client) {
         try {
-            List<UUID> productsIds = order.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
-
+            List<UUID> productsIds = orderFormDto.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
 
             AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
             List<ProductRepositoryDb> products = (List<ProductRepositoryDb>) productRepository.findAllById(productsIds);
@@ -70,26 +71,20 @@ public class OrderGateway {
             //Generated number order
             String numberOrder = NumberOrderGenerator.generateNumberOrder();
 
-            OrderRepositoryDb orderDB = new OrderRepositoryDb(
-                    client,
-                    numberOrder,
-                    new Date(),
-                    StatusOrder.WAITING_PAYMENTS,
-                    total.get(),
-                    PaymentsType.QR_CODE,
-                    null,
-                    LocalDateTime.now(),
-                    products
-            );
+            Order order = new Order(client, numberOrder, new Date(), StatusOrder.WAITING_PAYMENTS, total.get(), PaymentsType.QR_CODE, null, null, LocalDateTime.now(), products);
 
-            OrderRepositoryDb orderSaveDB = orderRepository.save(orderDB);
-
-
-            return ResponseEntity.ok(new OrderResultFormDto(orderSaveDB));
+            return doRegister(order.build());
         } catch (Exception e) {
             logger.error("Error registering new product", e);
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    public ResponseEntity<OrderResultFormDto> doRegister(OrderRepositoryDb orderDB) {
+        OrderRepositoryDb orderSaveDB = orderRepository.save(orderDB);
+
+
+        return ResponseEntity.ok(new OrderResultFormDto(orderSaveDB));
     }
 
     public ResponseEntity<OrderResultFormDto> update(OrderRepositoryDb order) {

@@ -2,11 +2,13 @@ package br.com.fiap.techchallenge.infrastructure.repository;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
-import br.com.fiap.techchallenge.common.type.NumericRepresentationUUIDType;
+import br.com.fiap.techchallenge.common.type.StringRepresentationUUIDType;
 import com.github.f4b6a3.ulid.UlidCreator;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -32,7 +34,7 @@ public class ClientRepositoryDb {
 
     @Id
     @Builder.Default
-    @Type(NumericRepresentationUUIDType.class)
+    @Type(StringRepresentationUUIDType.class)
     @Column(name = "ID")
     @NotNull
     @EqualsAndHashCode.Include
