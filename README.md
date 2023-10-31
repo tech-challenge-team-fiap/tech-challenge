@@ -52,8 +52,8 @@ On the other hand, there is a significant increase in verbosity in the project d
 Docker version: 20.10.9+
 Docker compose: v2+
 
-1. Build the project using the command `mvn package -Pdocker`.
-2. Run the command in the project folder `docker compose up`.
+1. Build the project using the command `mvn package`.
+2. Run the command in the project folder `docker-compose up`.
 3. After that, you can see the endpoints and model structure at 'http://localhost:8080/swagger-ui/index.html#/'
 
 Note: Every time you run the `docker compose up` command it creates an image, if you make changes you need to delete the image using the `docker rmi tech-challenge-spring-app` command
