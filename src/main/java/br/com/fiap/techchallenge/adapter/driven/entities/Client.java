@@ -18,12 +18,12 @@ public class Client {
 
     public Client() {}
 
-    public Client(ClientFormDto clienteFormDto) {
-        this.name = clienteFormDto.getName();
-        this.cpf = clienteFormDto.getCpf();
-        this.email = clienteFormDto.getEmail();
-        this.phone = clienteFormDto.getCpf();
-        this.dateRegister = clienteFormDto.getDateRegister();
+    public Client(ClientFormDto clientFormDto) {
+        this.name = clientFormDto.getName();
+        this.cpf = clientFormDto.getCpf();
+        this.email = clientFormDto.getEmail();
+        this.phone = clientFormDto.getCpf();
+        this.dateRegister = clientFormDto.getDateRegister();
     }
 
     public ClientRepositoryDb build(){

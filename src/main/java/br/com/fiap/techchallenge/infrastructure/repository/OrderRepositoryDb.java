@@ -34,7 +34,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Table(name = "ORDER")
+@Table(name = "CLIENT_ORDER")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -74,6 +74,7 @@ public class OrderRepositoryDb {
     private PaymentsType paymentsType;
 
     @Column(name = "PAYMENT_ID")
+    @Type(StringRepresentationUUIDType.class)
     @Builder.Default
     private UUID paymentId = nextId();
 
@@ -108,5 +109,9 @@ public class OrderRepositoryDb {
         this.dateDelivered = dateDelivered;
         this.dateLastUpdate = dateLastUpdate;
         this.products = products;
+    }
+
+    public void markStatusAs(StatusOrder status) {
+        this.statusOrder = status;
     }
 }

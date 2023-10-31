@@ -8,6 +8,8 @@ import br.com.fiap.techchallenge.common.enums.PaymentsType;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.exception.BaseException;
+import br.com.fiap.techchallenge.common.exception.order.InvalidOrderProcessException;
+import br.com.fiap.techchallenge.common.exception.order.InvalidProductStorageException;
 import br.com.fiap.techchallenge.common.utils.NumberOrderGenerator;
 import br.com.fiap.techchallenge.infrastructure.out.OrderRepository;
 import br.com.fiap.techchallenge.infrastructure.out.ProductRepository;
@@ -45,39 +47,34 @@ public class OrderGateway {
         this.productRepository = productRepository;
     }
 
-    public ResponseEntity<OrderResultFormDto> register(OrderFormDto orderFormDto, ClientRepositoryDb client) {
-        try {
-            List<UUID> productsIds = orderFormDto.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
+    public ResponseEntity<OrderResultFormDto> register(OrderFormDto orderFormDto, ClientRepositoryDb client) throws InvalidOrderProcessException {
+        List<UUID> productsIds = orderFormDto.getProducts().stream().map(ProductOrderFormDto::getId).collect(Collectors.toList());
 
-            AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
-            List<ProductRepositoryDb> products = (List<ProductRepositoryDb>) productRepository.findAllById(productsIds);
+        AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
+        List<ProductRepositoryDb> products = (List<ProductRepositoryDb>) productRepository.findAllById(productsIds);
 
-            // Calculated value total of list products
-            products.forEach(prod->{
-                total.updateAndGet(v -> v.add(prod.getPrice()));
+        // Calculated value total of list products
+        for (ProductRepositoryDb prod : products) {
+            total.updateAndGet(v -> v.add(prod.getPrice()));
 
-                if(prod.getQuantity().intValue() > 0) {
-                    prod.setQuantity(prod.getQuantity() - 1);
-
-                    logger.info("Update quantity productId:" + prod.getId());
-                    productRepository.save(prod);
-                }
-            });
-
-            if(total.get().intValue() == 0){
-                new BaseException("Error calculating total price orders");
+            if (prod.hasStorage()) {
+                prod.mergeQuantity(1);
+                productRepository.save(prod);
+            } else {
+                throw new InvalidProductStorageException(prod.getId());
             }
-
-            //Generated number order
-            String numberOrder = NumberOrderGenerator.generateNumberOrder();
-
-            Order order = new Order(client, numberOrder, new Date(), StatusOrder.WAITING_PAYMENTS, total.get(), PaymentsType.QR_CODE, null, null, LocalDateTime.now(), products);
-
-            return doRegister(order.build());
-        } catch (Exception e) {
-            logger.error("Error registering new product", e);
-            return ResponseEntity.badRequest().build();
         }
+
+        if (total.get().intValue() == 0) {
+            new BaseException("Error calculating total price orders");
+        }
+
+        //Generated number order
+        String numberOrder = NumberOrderGenerator.generateNumberOrder();
+
+        Order productOrder = new Order(client, numberOrder, new Date(), StatusOrder.WAITING_PAYMENTS, total.get(), PaymentsType.QR_CODE, null, null, LocalDateTime.now(), products);
+
+        return doRegister(productOrder.build());
     }
 
     public ResponseEntity<OrderResultFormDto> doRegister(OrderRepositoryDb orderDB) {
