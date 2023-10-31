@@ -26,16 +26,14 @@ public class RegisterNewProductUseCase extends AbstractProductUserCase {
 
     private final ProductGateway productGateway;
 
-    private final ProductRepository productRepository;
-
     @Autowired
-    public RegisterNewProductUseCase(ProductGateway productGateway, ProductRepository productRepository) {
+    public RegisterNewProductUseCase(ProductGateway productGateway) {
         this.productGateway = productGateway;
-        this.productRepository = productRepository;
     }
 
     public ResponseEntity<ProductRepositoryDb> register(final ProductFormDto productFormDto) throws InvalidProductsProcessException {
         validateQuantity(productFormDto.getQuantity());
+        validatePrice(productFormDto.getPrice());
 
         productFormDto.setTypeStatus(TypeStatus.ACTIVE);
         productFormDto.setDateRegister(LocalDateTime.now());

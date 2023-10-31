@@ -1,10 +1,8 @@
 package br.com.fiap.techchallenge.adapter.driven.entities.useCase.product;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductEditFormDto;
-import br.com.fiap.techchallenge.common.exception.BaseException;
 import br.com.fiap.techchallenge.common.exception.products.InvalidProductsProcessException;
 import br.com.fiap.techchallenge.common.exception.products.ProductNotFoundException;
-import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import br.com.fiap.techchallenge.infrastructure.gateway.ProductGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ProductRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
@@ -29,6 +27,7 @@ public class EditProductUseCase extends AbstractProductUserCase {
 
     public ResponseEntity<Integer> edit(final ProductEditFormDto productFormEditDto) throws InvalidProductsProcessException {
         validateQuantity(productFormEditDto.getQuantity());
+        validatePrice(productFormEditDto.getPrice());
 
         ProductRepositoryDb productDB = productRepository
                 .findById(productFormEditDto.getId())

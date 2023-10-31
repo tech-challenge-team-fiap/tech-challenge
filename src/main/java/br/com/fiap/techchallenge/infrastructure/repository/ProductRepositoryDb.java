@@ -97,4 +97,12 @@ public class ProductRepositoryDb {
         this.price = productFormEditDto.getPrice();
         this.typeStatus = productFormEditDto.getTypeStatus();
     }
+
+    public void mergeQuantity(Integer remove) {
+        this.quantity = this.quantity - remove;
+    }
+
+    public boolean hasStorage() {
+        return this.quantity > 0;
+    }
 }

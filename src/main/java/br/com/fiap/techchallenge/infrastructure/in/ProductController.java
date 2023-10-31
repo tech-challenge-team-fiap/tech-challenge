@@ -1,5 +1,7 @@
 package br.com.fiap.techchallenge.infrastructure.in;
 
+import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
+
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductEditFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.product.EditProductUseCase;
@@ -36,15 +38,6 @@ public class ProductController {
         this.editProductUseCase = editProductUseCase;
         this.removeProductUseCase = removeProductUseCase;
     }
-    private Map<String, String> problemOf(InvalidProcessException ex) {
-        Map<String, String> details = new HashMap<>();
-
-        details.put("tittle", ex.getTittle());
-        details.put("message", ex.getMessage());
-
-        return details;
-    }
-
 
     @PostMapping
     @Transactional

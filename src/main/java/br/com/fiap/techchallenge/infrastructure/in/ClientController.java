@@ -1,5 +1,7 @@
 package br.com.fiap.techchallenge.infrastructure.in;
 
+import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
+
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.EditClientUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RegisterNewClientUseCase;
@@ -35,16 +37,7 @@ public class ClientController {
         this.gateway = clientGateway;
     }
 
-    private Map<String, String> problemOf(InvalidProcessException ex) {
-        Map<String, String> details = new HashMap<>();
-
-        details.put("tittle", ex.getTittle());
-        details.put("message", ex.getMessage());
-
-        return details;
-    }
-
-    @PostMapping()
+    @PostMapping
     @Transactional
     public ResponseEntity create(@RequestBody ClientFormDto clientFormDto) throws ThrowableProblem {
         try {
@@ -54,7 +47,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity editClient(@RequestBody ClientFormDto clientFormDto) {
         try {
             clientFormDto.setCpf(clientFormDto.getCpf());
