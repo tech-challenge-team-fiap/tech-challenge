@@ -2,12 +2,25 @@ package br.com.fiap.techchallenge.infrastructure.repository;
 
 import br.com.fiap.techchallenge.common.enums.PaymentsType;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
-import br.com.fiap.techchallenge.common.enums.TypeProduct;
-import br.com.fiap.techchallenge.common.type.NumericRepresentationUUIDType;
+import br.com.fiap.techchallenge.common.type.StringRepresentationUUIDType;
 import com.github.f4b6a3.ulid.UlidCreator;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,16 +30,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Table(name = "ORDER")
+@Table(name = "CLIENT_ORDER")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +46,7 @@ public class OrderRepositoryDb {
 
     @Id
     @Builder.Default
-    @Type(NumericRepresentationUUIDType.class)
+    @Type(StringRepresentationUUIDType.class)
     @Column(name = "ID")
     @NotNull
     @EqualsAndHashCode.Include
@@ -66,7 +74,9 @@ public class OrderRepositoryDb {
     private PaymentsType paymentsType;
 
     @Column(name = "PAYMENT_ID")
-    private UUID paymentId;
+    @Type(StringRepresentationUUIDType.class)
+    @Builder.Default
+    private UUID paymentId = nextId();
 
     @Column(name = "DATE_DELIVERED")
     private LocalDateTime dateDelivered;
@@ -99,5 +109,9 @@ public class OrderRepositoryDb {
         this.dateDelivered = dateDelivered;
         this.dateLastUpdate = dateLastUpdate;
         this.products = products;
+    }
+
+    public void markStatusAs(StatusOrder status) {
+        this.statusOrder = status;
     }
 }

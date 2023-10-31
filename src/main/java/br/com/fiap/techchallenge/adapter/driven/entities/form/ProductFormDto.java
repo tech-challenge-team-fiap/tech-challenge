@@ -2,6 +2,8 @@ package br.com.fiap.techchallenge.adapter.driven.entities.form;
 
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@Valid
 public class ProductFormDto {
 
     private String name;
@@ -21,6 +24,7 @@ public class ProductFormDto {
 
     private TypeProduct typeProduct;
 
+    @Positive
     private BigDecimal price;
 
     private TypeStatus typeStatus;

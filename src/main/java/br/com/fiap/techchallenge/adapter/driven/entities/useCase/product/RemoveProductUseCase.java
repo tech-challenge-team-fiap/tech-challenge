@@ -1,6 +1,8 @@
 package br.com.fiap.techchallenge.adapter.driven.entities.useCase.product;
 
 import br.com.fiap.techchallenge.common.exception.BaseException;
+import br.com.fiap.techchallenge.common.exception.products.InvalidProductsProcessException;
+import br.com.fiap.techchallenge.common.exception.products.ProductNotFoundException;
 import br.com.fiap.techchallenge.infrastructure.gateway.ProductGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ProductRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
@@ -24,9 +26,9 @@ public class RemoveProductUseCase {
         this.productRepository = productRepository;
     }
 
-    public ResponseEntity<Integer> remove(final UUID id) {
+    public ResponseEntity<Integer> remove(final UUID id) throws InvalidProductsProcessException {
         ProductRepositoryDb productDB = productRepository.findById(id)
-                .orElseThrow(() -> new BaseException("Product with ID " + id + " does not exist!"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
         return productGateway.remove(productDB);
     }

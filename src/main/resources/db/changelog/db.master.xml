@@ -126,21 +126,21 @@
     <changeSet id="20231024083800" author="TJOLO">
         <preConditions>
             <not>
-                <tableExists tableName="ORDER"/>
+                <tableExists tableName="CLIENT_ORDER"/>
             </not>
         </preConditions>
-        <comment>Creates the ORDER table</comment>
-        <createTable tableName="ORDER"
+        <comment>Creates the CLIENT_ORDER table</comment>
+        <createTable tableName="CLIENT_ORDER"
           remarks="Holds the available order">
             <column name="ID"
               type="${uuidType}"
               remarks="Identifies the given order">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="ORDER_PK"/>
+                <constraints primaryKey="true" nullable="false" primaryKeyName="CLIENT_ORDER_PK"/>
             </column>
             <column name="CLIENT_ID"
               type="${uuidType}"
               remarks="The client order identification">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="ORDER_NUMBER"
               type="VARCHAR(256)"
@@ -175,7 +175,7 @@
             <column name="DATE_DELIVERED"
               type="${dateTimeType}"
               remarks="The order date delivered">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="UPDATED_AT"
               type="${dateTimeType}"
@@ -191,11 +191,11 @@
     <changeSet id="20231024083801" author="TJOLO">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyName="ORDER_CLIENT_FK" foreignKeyTableName="ORDER"/>
+                <foreignKeyConstraintExists foreignKeyName="ORDER_CLIENT_FK" foreignKeyTableName="CLIENT_ORDER"/>
             </not>
         </preConditions>
-        <comment>Creates the foreign keys on the ORDER table</comment>
-        <addForeignKeyConstraint baseTableName="ORDER"
+        <comment>Creates the foreign keys on the CLIENT_ORDER table</comment>
+        <addForeignKeyConstraint baseTableName="CLIENT_ORDER"
           baseColumnNames="CLIENT_ID"
           constraintName="ORDER_CLIENT_FK"
           referencedTableName="CLIENT"
@@ -238,7 +238,7 @@
         <addForeignKeyConstraint baseTableName="ORDER_PRODUCT"
           baseColumnNames="ORDER_ID"
           constraintName="ORDER_PRODUCT_ORDER_FK"
-          referencedTableName="ORDER"
+          referencedTableName="CLIENT_ORDER"
           referencedColumnNames="ID"
           onDelete="CASCADE"/>
     </changeSet>

@@ -1,10 +1,13 @@
 package br.com.fiap.techchallenge.adapter.driven.entities;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
-import java.time.Instant;
+import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 public class Client {
 
     private String name;
@@ -15,51 +18,21 @@ public class Client {
 
     public Client() {}
 
-    public Client(ClientFormDto clienteFormDto) {
-        this.name = clienteFormDto.getName();
-        this.cpf = clienteFormDto.getCpf();
-        this.email = clienteFormDto.getEmail();
-        this.phone = clienteFormDto.getCpf();
-        this.dateRegister = clienteFormDto.getDateRegister();
+    public Client(ClientFormDto clientFormDto) {
+        this.name = clientFormDto.getName();
+        this.cpf = clientFormDto.getCpf();
+        this.email = clientFormDto.getEmail();
+        this.phone = clientFormDto.getCpf();
+        this.dateRegister = clientFormDto.getDateRegister();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalDateTime getDateRegister() {
-        return dateRegister;
-    }
-
-    public void setDateRegister(LocalDateTime dateRegister) {
-        this.dateRegister = dateRegister;
+    public ClientRepositoryDb build(){
+        return ClientRepositoryDb.builder()
+                                 .name(getName())
+                                 .cpf(getCpf())
+                                 .email(getEmail())
+                                 .phone(getPhone())
+                                 .dateRegister(getDateRegister())
+                                 .build();
     }
 }

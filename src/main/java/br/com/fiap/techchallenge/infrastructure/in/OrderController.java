@@ -1,14 +1,19 @@
 package br.com.fiap.techchallenge.infrastructure.in;
 
+import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
+
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderFormDto;
-import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderResultFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.RegisterNewOrderUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.UpdateOrderUseCase;
+import br.com.fiap.techchallenge.common.exception.InvalidProcessException;
+import br.com.fiap.techchallenge.common.utils.ProblemAware;
 import br.com.fiap.techchallenge.infrastructure.gateway.OrderGateway;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.transaction.Transactional;
 import jakarta.websocket.server.PathParam;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,21 +38,29 @@ public class OrderController {
         this.gateway = gateway;
     }
 
-    @PostMapping(path = "register")
+    @PostMapping
     @Transactional
-    public ResponseEntity<OrderResultFormDto> create(@RequestBody OrderFormDto orderFormDto) {
-        return registerNewOrderUseCase.register(orderFormDto);
+    public ResponseEntity create(@RequestBody OrderFormDto orderFormDto) {
+        try {
+            return registerNewOrderUseCase.register(orderFormDto);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
-    @PutMapping(path = "update")
-    public ResponseEntity<OrderResultFormDto> update(@PathParam("numberOrder") String numberOrder, @PathParam("status") String status) {
-        return updateOrderUseCase.update(numberOrder, status);
+    @PutMapping
+    public ResponseEntity update(@PathParam("numberOrder") String numberOrder, @PathParam("status") String status) {
+        try {
+            return updateOrderUseCase.update(numberOrder, status);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
-    @GetMapping(path = "all")
+    @GetMapping("/{status}")
     @Transactional
     @JsonIgnore
-    public ResponseEntity<List<OrderRepositoryDb>> findAll(@PathParam("status") String status) {
+    public ResponseEntity<List<OrderRepositoryDb>> findAll(@PathVariable("status") String status) {
         return gateway.findAll(status);
     }
 

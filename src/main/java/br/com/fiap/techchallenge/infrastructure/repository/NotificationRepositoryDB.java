@@ -1,10 +1,14 @@
 package br.com.fiap.techchallenge.infrastructure.repository;
 
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
-import br.com.fiap.techchallenge.common.enums.TypeStatus;
-import br.com.fiap.techchallenge.common.type.NumericRepresentationUUIDType;
+import br.com.fiap.techchallenge.common.type.StringRepresentationUUIDType;
 import com.github.f4b6a3.ulid.UlidCreator;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,8 +19,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,7 +36,7 @@ public class NotificationRepositoryDB {
 
     @Id
     @Builder.Default
-    @Type(NumericRepresentationUUIDType.class)
+    @Type(StringRepresentationUUIDType.class)
     @Column(name = "ID")
     @NotNull
     @EqualsAndHashCode.Include

@@ -1,15 +1,23 @@
 package br.com.fiap.techchallenge.infrastructure.in;
 
+import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
+
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.EditClientUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RegisterNewClientUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RemoveClientUseCase;
+import br.com.fiap.techchallenge.common.exception.InvalidProcessException;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import jakarta.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.zalando.problem.ThrowableProblem;
 
 @RestController
 @RequestMapping("/clients")
@@ -29,21 +37,33 @@ public class ClientController {
         this.gateway = clientGateway;
     }
 
-    @PostMapping()
+    @PostMapping
     @Transactional
-    public ResponseEntity<UUID> create(@RequestBody ClientFormDto clientFormDto) {
-        return registerNewClientUseCase.register(clientFormDto);
+    public ResponseEntity create(@RequestBody ClientFormDto clientFormDto) throws ThrowableProblem {
+        try {
+            return registerNewClientUseCase.register(clientFormDto);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
-    @PutMapping()
-    public ResponseEntity<Integer> editClient(@RequestBody ClientFormDto clientFormDto) {
-        clientFormDto.setCpf(clientFormDto.getCpf());
-        return editClientUseCase.edit(clientFormDto);
+    @PutMapping
+    public ResponseEntity editClient(@RequestBody ClientFormDto clientFormDto) {
+        try {
+            clientFormDto.setCpf(clientFormDto.getCpf());
+            return editClientUseCase.edit(clientFormDto);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Integer> removeClient(@PathVariable String cpf) {
-        return removeClientUseCase.remove(cpf);
+    public ResponseEntity removeClient(@PathVariable String cpf) {
+        try {
+            return removeClientUseCase.remove(cpf);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
 
@@ -51,6 +71,16 @@ public class ClientController {
     @Transactional
     public ResponseEntity findAll() {
         return gateway.findAll();
+    }
+
+    @GetMapping("/{cpf}")
+    @Transactional
+    public ResponseEntity findByCpf(@PathVariable String cpf) {
+        try {
+            return gateway.findByCpf(cpf);
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
     }
 
 }

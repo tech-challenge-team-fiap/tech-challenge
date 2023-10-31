@@ -1,6 +1,5 @@
 package br.com.fiap.techchallenge.common.component;
 
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.RegisterNewOrderUseCase;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
 import br.com.fiap.techchallenge.infrastructure.out.NotificationRepository;
 import br.com.fiap.techchallenge.infrastructure.out.OrderQueueRepository;
@@ -18,9 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
 
 @Component
 @EnableScheduling
@@ -40,32 +36,46 @@ public class CronJob {
 
     @Scheduled(cron = "0 */1 * ? * *")
     public void finishedOrder() {
-        System.out.println("=========== [COZINHA] FINALIZANDO PEDIDOS ========== ");
+        System.out.println("=========== [COOK-ROOM] FINISHING CLIENT ORDER ========== ");
 
-        OrderQueueRepositoryDB item = orderQueueRepository
-                .findAllByStatusOrder(Sort.by(Sort.Direction.ASC, "dateRegister"), StatusOrder.IN_PREPARATION)
-                .stream()
-                .findFirst()
-                .get();
+        OrderQueueRepositoryDB item = clientOrderPreparation();
 
-        if(item != null && StatusOrder.IN_PREPARATION.name().equals(item.getStatusOrder().name().toUpperCase())) {
-            logger.info("[FILA] Pedido Id:" +item.getId() + "/ Numero Pedido: " + item.getNumberOrder() + "/ Status Anterior:" + item.getStatusOrder());
+        if (item != null) {
+            logger.info("[QUEUE] Client order Id:" + item.getId() + "/ Number order: " + item.getNumberOrder() + "/ Phase:" + item.getStatusOrder());
             item.setStatusOrder(StatusOrder.READY);
 
             orderQueueRepository.save(item);
 
+            NotificationRepositoryDB notification = NotificationRepositoryDB.builder()
+                .numberOrder(item.getNumberOrder())
+                .message("Finishing client order: " + item.getNumberOrder())
+                .statusOrder(StatusOrder.READY)
+                .dateRegister(LocalDateTime.now())
+                .build();
 
-            NotificationRepositoryDB notification = new NotificationRepositoryDB( item.getNumberOrder(), "Finalizado o pedido: "+ item.getNumberOrder(),  StatusOrder.READY, LocalDateTime.now() );
-
-            logger.info("[Notificacao] Notificação enviada ao cliente que o pedido esta PRONTO");
+            logger.info("[Notification] Notifying was sent to client that client order is READY");
             notificationRepository.save(notification);
 
-            OrderRepositoryDb order = orderRepository.findByNumberOrder(item.getNumberOrder()).get();
-            order.setStatusOrder(StatusOrder.READY);
-            order.setDateLastUpdate(LocalDateTime.now());
-
-            logger.info("[FILA] Pedido Id:" +order.getId() + "/ Numero Pedido: " + order.getNumberOrder() + "/ Status Atual:" + order.getStatusOrder());
-            orderRepository.save(order);
+            doFinishedOrder(item);
+        } else {
+            logger.info("[QUEUE] Does not have any client order to process");
         }
+    }
+
+    private void doFinishedOrder(OrderQueueRepositoryDB item) {
+        OrderRepositoryDb order = orderRepository.findByNumberOrder(item.getNumberOrder()).get();
+        order.setStatusOrder(StatusOrder.READY);
+        order.setDateLastUpdate(LocalDateTime.now());
+
+        logger.info("[QUEUE] Client order Id:" + order.getId() + "/ Number order: " + order.getNumberOrder() + "/ Phase:" + order.getStatusOrder());
+        orderRepository.save(order);
+    }
+
+    private OrderQueueRepositoryDB clientOrderPreparation() {
+        return orderQueueRepository
+            .findAllByStatusOrder(Sort.by(Sort.Direction.ASC, "dateRegister"), StatusOrder.IN_PREPARATION)
+            .stream()
+            .findFirst()
+            .orElse(null);
     }
 }

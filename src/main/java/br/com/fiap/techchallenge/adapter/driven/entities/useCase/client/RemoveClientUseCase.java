@@ -1,6 +1,9 @@
 package br.com.fiap.techchallenge.adapter.driven.entities.useCase.client;
 
 import br.com.fiap.techchallenge.common.exception.BaseException;
+import br.com.fiap.techchallenge.common.exception.client.ClientNotFoundException;
+import br.com.fiap.techchallenge.common.exception.client.InvalidClientProcessException;
+import br.com.fiap.techchallenge.common.utils.ValidCPF;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
@@ -23,9 +26,11 @@ public class RemoveClientUseCase {
         this.clientRepository = clientRepository;
     }
 
-    public ResponseEntity<Integer> remove(final String cpf) {
+    public ResponseEntity<Integer> remove(final String cpf) throws InvalidClientProcessException {
+        ValidCPF.validateCpf(cpf);
+
         ClientRepositoryDb existingClient = clientRepository.findByCpf(cpf)
-                .orElseThrow(() -> new BaseException("Client with CPF " + cpf + " does not exist!"));
+                .orElseThrow(() -> new ClientNotFoundException(cpf));
 
         return clientGateway.delete(existingClient);
     }
