@@ -1,10 +1,12 @@
 package br.com.fiap.techchallenge;
 
-
 import br.com.fiap.techchallenge.adapter.driven.entities.Client;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.client.RegisterNewClientUseCase;
 import br.com.fiap.techchallenge.common.exception.BaseException;
+import br.com.fiap.techchallenge.common.exception.client.ClientAlreadyExistsException;
+import br.com.fiap.techchallenge.common.exception.client.InvalidCpfException;
+import br.com.fiap.techchallenge.common.exception.client.InvalidPhoneNumberException;
 import br.com.fiap.techchallenge.infrastructure.gateway.ClientGateway;
 import br.com.fiap.techchallenge.infrastructure.out.ClientRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
@@ -53,7 +55,7 @@ class RegisterNewClientUseCaseTest {
         ClientFormDto clientFormDto = new ClientFormDto("John Doe", "55070587098", "john.doe@example.com", "1234567890", LocalDateTime.now());
         clientFormDto.setCpf("55070587098");
 
-        assertThrows(BaseException.class, () -> registerNewClientUseCase.register(clientFormDto));
+        assertThrows(InvalidCpfException.class, () -> registerNewClientUseCase.register(clientFormDto));
     }
 
     @Test
@@ -61,15 +63,15 @@ class RegisterNewClientUseCaseTest {
         ClientFormDto clientFormDto = new ClientFormDto("John Doe", "550.705.870-99", "john.doe@examplecom", "1234567890", LocalDateTime.now());
         clientFormDto.setEmail("john.doe@examplecom");
 
-        assertThrows(BaseException.class, () -> registerNewClientUseCase.register(clientFormDto));
+        assertThrows(InvalidPhoneNumberException.class, () -> registerNewClientUseCase.register(clientFormDto));
     }
 
     @Test
     void shouldThrowInvalidInputExceptionForInvalidPhoneNumber() {
         ClientFormDto clientFormDto = new ClientFormDto("John Doe", "550.705.870-99", "john.doe@example.com", "1234567890", LocalDateTime.now());
-        clientFormDto.setPhoneNumber("1234567890");
+        clientFormDto.setPhone("1234567890");
 
-        assertThrows(BaseException.class, () -> registerNewClientUseCase.register(clientFormDto));
+        assertThrows(InvalidPhoneNumberException.class, () -> registerNewClientUseCase.register(clientFormDto));
     }
 
     @Test
@@ -80,6 +82,6 @@ class RegisterNewClientUseCaseTest {
 
         when(clientRepository.findByCpf(anyString())).thenReturn(Optional.of(new ClientRepositoryDb()));
 
-        assertThrows(BaseException.class, () -> registerNewClientUseCase.register(clientFormDto));
+        assertThrows(ClientAlreadyExistsException.class, () -> registerNewClientUseCase.register(clientFormDto));
     }
 }
