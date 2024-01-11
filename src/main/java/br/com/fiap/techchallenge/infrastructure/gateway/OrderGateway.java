@@ -7,7 +7,6 @@ import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderResultFormDto
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductOrderFormDto;
 import br.com.fiap.techchallenge.common.enums.PaymentsType;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
-import br.com.fiap.techchallenge.common.enums.TypeStatus;
 import br.com.fiap.techchallenge.common.exception.BaseException;
 import br.com.fiap.techchallenge.common.exception.order.InvalidOrderProcessException;
 import br.com.fiap.techchallenge.common.exception.order.InvalidProductStorageException;
@@ -159,6 +158,23 @@ public class OrderGateway {
             }
         } catch (Exception e) {
             logger.error("Error registering new product", e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity getByStatusPayments(boolean isPayments) {
+        try{
+            List<OrderListDto> allOrders = new ArrayList<>();
+            StatusOrder status = isPayments ? StatusOrder.PAYMENTS_RECEIVED : StatusOrder.WAITING_PAYMENTS;
+
+            List<OrderRepositoryDb> orders = orderRepository
+                    .findAllByStatusOrder(Sort.by(Sort.Direction.DESC, "date"), status );
+
+            orders.forEach(order -> allOrders.add(new OrderListDto(order)));
+
+            return ResponseEntity.ok(allOrders);
+
+        }catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
     }

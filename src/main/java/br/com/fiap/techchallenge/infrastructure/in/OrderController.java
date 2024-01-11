@@ -2,19 +2,15 @@ package br.com.fiap.techchallenge.infrastructure.in;
 
 import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
 
-import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderCheckoutDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.RegisterNewOrderUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.UpdateOrderUseCase;
 import br.com.fiap.techchallenge.common.exception.InvalidProcessException;
-import br.com.fiap.techchallenge.common.utils.ProblemAware;
 import br.com.fiap.techchallenge.infrastructure.gateway.OrderGateway;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.transaction.Transactional;
 import jakarta.websocket.server.PathParam;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +66,15 @@ public class OrderController {
     public ResponseEntity checkStatusPayments(@PathVariable("numberOrder") String numberOrder){
         return gateway.checkPaymentStatus(numberOrder);
     }
+
+    @GetMapping("/payments-received/{payment}")
+    @Transactional
+    @JsonIgnore
+    public ResponseEntity getByStatusPayments(@PathVariable("payment") boolean isPayments){
+        return gateway.getByStatusPayments(isPayments);
+    }
+
+
 
     @GetMapping
     @Transactional
