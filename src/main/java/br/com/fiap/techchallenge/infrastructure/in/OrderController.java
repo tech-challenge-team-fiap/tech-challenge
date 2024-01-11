@@ -2,6 +2,7 @@ package br.com.fiap.techchallenge.infrastructure.in;
 
 import static br.com.fiap.techchallenge.common.utils.ProblemAware.problemOf;
 
+import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderCheckoutDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.RegisterNewOrderUseCase;
 import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.UpdateOrderUseCase;
@@ -23,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-
 
     private final RegisterNewOrderUseCase registerNewOrderUseCase;
 
@@ -62,6 +62,13 @@ public class OrderController {
     @JsonIgnore
     public ResponseEntity<List<OrderRepositoryDb>> findAll(@PathVariable("status") String status) {
         return gateway.findAll(status);
+    }
+
+    @GetMapping("/status-payments/{numberOrder}")
+    @Transactional
+    @JsonIgnore
+    public ResponseEntity checkStatusPayments(@PathVariable("numberOrder") String numberOrder){
+        return gateway.checkPaymentStatus(numberOrder);
     }
 
     @GetMapping

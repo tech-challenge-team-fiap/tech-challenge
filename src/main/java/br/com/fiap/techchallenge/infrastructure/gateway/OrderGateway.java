@@ -2,15 +2,18 @@ package br.com.fiap.techchallenge.infrastructure.gateway;
 
 import br.com.fiap.techchallenge.adapter.driven.entities.Order;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderFormDto;
+import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderListDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.OrderResultFormDto;
 import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductOrderFormDto;
 import br.com.fiap.techchallenge.common.enums.PaymentsType;
 import br.com.fiap.techchallenge.common.enums.StatusOrder;
-import br.com.fiap.techchallenge.common.enums.TypeProduct;
+import br.com.fiap.techchallenge.common.enums.TypeStatus;
 import br.com.fiap.techchallenge.common.exception.BaseException;
 import br.com.fiap.techchallenge.common.exception.order.InvalidOrderProcessException;
 import br.com.fiap.techchallenge.common.exception.order.InvalidProductStorageException;
+import br.com.fiap.techchallenge.common.exception.order.OrderNotFoundException;
 import br.com.fiap.techchallenge.common.utils.NumberOrderGenerator;
+import br.com.fiap.techchallenge.infrastructure.out.OrderQueueRepository;
 import br.com.fiap.techchallenge.infrastructure.out.OrderRepository;
 import br.com.fiap.techchallenge.infrastructure.out.ProductRepository;
 import br.com.fiap.techchallenge.infrastructure.repository.ClientRepositoryDb;
@@ -18,7 +21,8 @@ import br.com.fiap.techchallenge.infrastructure.repository.OrderQueueRepositoryD
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import br.com.fiap.techchallenge.infrastructure.repository.ProductRepositoryDb;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -41,10 +43,13 @@ public class OrderGateway {
 
     private final ProductRepository productRepository;
 
+    private final OrderQueueRepository orderQueueRepository;
+
     @Autowired
-    public OrderGateway(OrderRepository orderRepository, ProductRepository productRepository){
+    public OrderGateway(OrderRepository orderRepository, ProductRepository productRepository, OrderQueueRepository orderQueueRepository){
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.orderQueueRepository = orderQueueRepository;
     }
 
     public ResponseEntity<OrderResultFormDto> register(OrderFormDto orderFormDto, ClientRepositoryDb client) throws InvalidOrderProcessException {
@@ -79,8 +84,6 @@ public class OrderGateway {
 
     public ResponseEntity<OrderResultFormDto> doRegister(OrderRepositoryDb orderDB) {
         OrderRepositoryDb orderSaveDB = orderRepository.save(orderDB);
-
-
         return ResponseEntity.ok(new OrderResultFormDto(orderSaveDB));
     }
 
@@ -112,8 +115,48 @@ public class OrderGateway {
 
     public ResponseEntity findAll() {
         try {
-            List<OrderRepositoryDb> itens = (List<OrderRepositoryDb>) orderRepository.findAll();
-            return ResponseEntity.ok(itens);
+            List<OrderListDto> allOrders = new ArrayList<>();
+
+            //READY
+            List<OrderQueueRepositoryDB> orderWithStatusRead = orderQueueRepository
+                    .findAllByStatusOrder(Sort.by(Sort.Direction.DESC, "dateRegister"), StatusOrder.READY);
+
+            orderWithStatusRead.forEach(order -> allOrders.add(new OrderListDto(order)));
+
+            //IN_PREPARATION
+            List<OrderQueueRepositoryDB> orderWithStatusPreparation = orderQueueRepository
+                    .findAllByStatusOrder(Sort.by(Sort.Direction.DESC, "dateRegister"), StatusOrder.IN_PREPARATION);
+
+            orderWithStatusPreparation.forEach(order -> allOrders.add(new OrderListDto(order)));
+
+            //RECEIVED
+            List<OrderRepositoryDb> orderWithStatusReceived = orderRepository
+                    .findAllByStatusOrder(Sort.by(Sort.Direction.DESC, "date"), StatusOrder.WAITING_PAYMENTS);
+
+            orderWithStatusReceived.forEach(order -> allOrders.add(new OrderListDto(order)));
+
+            return ResponseEntity.ok(allOrders);
+        } catch (Exception e) {
+            logger.error("Error list all", e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    public ResponseEntity checkPaymentStatus(String numberOrder) {
+        try {
+            Optional<OrderRepositoryDb> order = orderRepository.findByNumberOrder(numberOrder);
+            if(order.isPresent()) {
+                boolean isPay = order.get().getStatusOrder().equals(StatusOrder.PAYMENTS_RECEIVED);
+
+                if(isPay){
+                    return ResponseEntity.ok(new OrderResultFormDto(order.get()));
+                }
+
+                return ResponseEntity.ok(false);
+            } else {
+                throw new OrderNotFoundException(numberOrder);
+            }
         } catch (Exception e) {
             logger.error("Error registering new product", e);
             return ResponseEntity.badRequest().build();
