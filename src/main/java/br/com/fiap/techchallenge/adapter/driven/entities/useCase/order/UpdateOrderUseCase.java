@@ -13,6 +13,8 @@ import br.com.fiap.techchallenge.infrastructure.repository.NotificationRepositor
 import br.com.fiap.techchallenge.infrastructure.repository.OrderQueueRepositoryDB;
 import br.com.fiap.techchallenge.infrastructure.repository.OrderRepositoryDb;
 import java.time.LocalDateTime;
+
+import br.com.fiap.techchallenge.infrastructure.webhook.Payments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,14 @@ public class UpdateOrderUseCase extends AbstractOrderUseCase {
 
     private final OrderQueueRepository orderQueueRepository;
 
-    public UpdateOrderUseCase(OrderGateway gateway, OrderRepository orderRepository, NotificationRepository notificationRepository, OrderQueueRepository orderQueueRepository, ProductRepository productRepository) {
+    private Payments payments;
+
+    public UpdateOrderUseCase(OrderGateway gateway, OrderRepository orderRepository, NotificationRepository notificationRepository, OrderQueueRepository orderQueueRepository, ProductRepository productRepository, Payments payments) {
         super(productRepository, orderRepository);
         this.gateway = gateway;
         this.notificationRepository = notificationRepository;
         this.orderQueueRepository = orderQueueRepository;
+        this.payments = payments;
     }
 
     public ResponseEntity<OrderResultFormDto> update(String numberOrder, String status) throws InvalidOrderProcessException {
@@ -77,8 +82,14 @@ public class UpdateOrderUseCase extends AbstractOrderUseCase {
     }
 
     private void paymentReceived(String numberOrder, StatusOrder statusOrder) {
-        if (StatusOrder.PAYMENTS_RECEIVED.equals(statusOrder)) {
 
+        boolean isPayment = payments.checkStatusPayments(numberOrder);
+
+        if(isPayment){
+            logger.info("[ORDER] Payment checked and status is true ");
+        }
+
+        if (StatusOrder.PAYMENTS_RECEIVED.equals(statusOrder) && isPayment) {
             sendNotificationToClient(numberOrder, StatusOrder.RECEIVED);
 
             // Send order to queue IN_PREPARATION
