@@ -3,6 +3,19 @@
 # Tech challenge 1
 Fast food system development project, to support a neighborhood café that is expanding its operations due to its great success.
 
+### Problem
+The neighborhood fast-food joint, experiencing significant growth due to its success, faces challenges in customer service. The current manual order-taking process leads to chaos and confusion. Complex orders may be misinterpreted or forgotten, causing delays in preparation and customer dissatisfaction.
+
+### Current Challenges
+- Lost orders.
+- Lack of assurance in correct order preparation.
+- Delays in delivery due to coordination issues between staff and kitchen.
+
+### Negative Impact
+The expansion of the fast-food joint may be hindered by customer dissatisfaction, resulting in a loss of business.
+
+### Proposed Solution
+To overcome these challenges, the fast-food joint plans to invest in a Fast Food Self-Service System. This system will allow customers to place orders without interacting with an attendant, improving service efficiency.
 
 ### Reference Documentation
 For further reference, please consider the following sections:
