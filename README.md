@@ -1,39 +1,57 @@
-# Read Me First
-The following was discovered as part of building this project:
+# Tech-Challenge
 
-* The original package name 'br.com.fiap.tech-challenge' is invalid and this project uses 'br.com.fiap.techchallenge' instead.
+Desafio desenvolvido para o curso de Software Architecture da FIAP Pós Tech.
 
-# Getting Started
+## Versão
+2.0.0
 
-### Reference Documentation
-For further reference, please consider the following sections:
+## Requisitos minimos
+- JDK 17
+- maven 3.6.3 ou superior
+- docker e docker-compose
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.4/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.4/maven-plugin/reference/html/#build-image)
-* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/3.1.4/reference/htmlsingle/index.html#howto.data-initialization.migration-tool.liquibase)
-* [Docker Compose Support](https://docs.spring.io/spring-boot/docs/3.1.4/reference/htmlsingle/index.html#features.docker-compose)
+## Para executar, siga os passos abaixo:
 
-### Guides
-The following guides illustrate how to use some features concretely:
+- Clone este repositório
+```bash
+$ git clone https://github.com/tech-challenge-team-fiap/tech-challenge.git
+```
+- Abra o projeto na IDE de sua preferência
 
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
+- Rode o arquivo build-docker-image, o nome fiap-k8s será sua tag para baixar a imagem local via docker
+```bash
+$ ./build-docker-image fiap-k8s
+```
 
-### Docker Compose support
-This project contains a Docker Compose file named `compose.yaml`.
-In this file, the following services have been defined:
+## Deploy via Kubernetes
 
-* mysql: [`mysql:latest`](https://hub.docker.com/_/mysql)
+Para fazer o deploy desse projeto acesse a pasta ./k8s
 
-Please review the tags of the used images and set them to the same as you're running in production.
+- Pode executar os comandos abaixos de forma individual e na sequência ou executar o .sh disponivel na pasta.
 
-# Docker Compose
+```bash
+kubectl apply -f mysql-secrets.yaml
+kubectl apply -f mysql-configMap.yaml
+kubectl apply -f db-deploy.yaml
+kubectl apply -f app-deploy.yaml
+```
 
-### Pré requisitos
-Docker version: 20.10.9+
-Docker compose: v2+
+Para visualizar a aplicação disponivel e acessar o Swagger, executar o comando abaixo:
 
-1. Buildar o projeto utlizando o comando `mvn package -Pdocker`.
-2. Executar o comando na pasta do projeto `docker compose up`.
+```bash
+Para API: kubectl port-forward <nome_pod> 8080:8080
+Para DB:  kubectl port-forward <nome_pod> 3306:3306
+```
 
-Obs: Toda vez que roda do commando `docker compose up` ele cria uma imagem, se realizar alterações precisa apagar a imagem utilizando o commando `docker rmi tech-challenge-spring-app`
+Abra o Navegador após a liberação da porta:
+> http://localhost:8080/swagger-ui/index.html#/
+
+Se desejar remover todos os recursos criados, Pode executar os comandos abaixos de forma individual e na sequência ou executar o .sh
+
+```bash
+kubectl scale deployment --all --replicas=0
+kubectl delete pods --all
+kubectl delete services --all
+kubectl delete deployments --all
+```
+
