@@ -34,7 +34,7 @@ public class OrderController {
         this.gateway = gateway;
     }
 
-    @PostMapping
+    @PostMapping("/{checkout}")
     @Transactional
     public ResponseEntity create(@RequestBody OrderFormDto orderFormDto) {
         try {

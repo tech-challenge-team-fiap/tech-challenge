@@ -76,7 +76,7 @@ public class OrderGateway {
         //Generated number order
         String numberOrder = NumberOrderGenerator.generateNumberOrder();
 
-        Order productOrder = new Order(client, numberOrder, new Date(), StatusOrder.WAITING_PAYMENTS, total.get(), PaymentsType.QR_CODE, null, null, LocalDateTime.now(), products);
+        Order productOrder = new Order(client, numberOrder, new Date(), StatusOrder.IN_PREPARATION, total.get(), PaymentsType.QR_CODE, null, null, LocalDateTime.now(), products);
 
         return doRegister(productOrder.build());
     }
