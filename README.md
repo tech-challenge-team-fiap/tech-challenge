@@ -51,7 +51,7 @@ On the other hand, there is a significant increase in verbosity in the project d
 
 ## Architecture - Phase 2
 
-![image](/Users/jaircavalcante/Desktop/clean-architecture.png)
+![image](https://github.com/tech-challenge-team-fiap/tech-challenge/assets/18012024/18cc8a87-ec52-4186-a9ec-52012346d699)
 
 Clean Architecture is a software design philosophy that prioritizes the creation of modular, scalable, and maintainable applications. Introduced by Robert C. Martin, also known as "Uncle Bob," Clean Architecture provides a structured approach to organizing code by defining clear boundaries between different components. The primary goal is to develop systems that are not only functional but also easy to understand, test, and adapt to changing requirements.
 
