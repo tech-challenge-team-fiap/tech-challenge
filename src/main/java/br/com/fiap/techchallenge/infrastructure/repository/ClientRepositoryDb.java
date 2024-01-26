@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.infrastructure.repository;
 
-import br.com.fiap.techchallenge.adapter.driven.entities.Client;
-import br.com.fiap.techchallenge.adapter.driven.entities.form.ClientFormDto;
+import br.com.fiap.techchallenge.entities.Client;
+import br.com.fiap.techchallenge.db.dto.client.ClientDto;
 import br.com.fiap.techchallenge.common.type.StringRepresentationUUIDType;
 import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.Column;
@@ -63,21 +63,21 @@ public class ClientRepositoryDb {
         return UlidCreator.getMonotonicUlid().toUuid();
     }
 
-    public ClientRepositoryDb(ClientFormDto clientFormDto) {
-        this.name = clientFormDto.getName();
-        this.cpf = clientFormDto.getCpf();
-        this.email = clientFormDto.getEmail();
-        this.phone = clientFormDto.getPhone();
-        this.dateRegister = clientFormDto.getDateRegister();
+    public ClientRepositoryDb(ClientDto clientDto) {
+        this.name = clientDto.getName();
+        this.cpf = clientDto.getCpf();
+        this.email = clientDto.getEmail();
+        this.phone = clientDto.getPhone();
+        this.dateRegister = clientDto.getDateRegister();
     }
 
-    public void updateFromDto(ClientFormDto clientFormDto) {
-        // Assuming Client class has these setters
-        this.setName(clientFormDto.getName());
-        this.setEmail(clientFormDto.getEmail());
-        this.setPhone(clientFormDto.getPhone());
-        this.setCpf(clientFormDto.getCpf());
-        // Add more fields as needed
+    public ClientRepositoryDb(ClientDto clientDto, UUID id ) {
+        this.id = id;
+        this.name = clientDto.getName();
+        this.cpf = clientDto.getCpf();
+        this.email = clientDto.getEmail();
+        this.phone = clientDto.getPhone();
+        this.dateRegister = clientDto.getDateRegister();
     }
 
     public ClientRepositoryDb(Client client) {

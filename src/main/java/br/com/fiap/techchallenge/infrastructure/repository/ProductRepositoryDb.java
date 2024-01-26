@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.infrastructure.repository;
 
-import br.com.fiap.techchallenge.adapter.driven.entities.form.ProductEditFormDto;
+import br.com.fiap.techchallenge.db.dto.product.ProductEditFormDto;
 import br.com.fiap.techchallenge.common.enums.TypeProduct;
 import br.com.fiap.techchallenge.common.enums.TypeStatus;
 import br.com.fiap.techchallenge.common.type.StringRepresentationUUIDType;
@@ -73,20 +73,17 @@ public class ProductRepositoryDb {
     @EqualsAndHashCode.Exclude
     private LocalDateTime dateRegister;
 
-
     @NotNull
     private static UUID nextId() {
         return UlidCreator.getMonotonicUlid().toUuid();
     }
 
-    public ProductRepositoryDb(String name, String description, Integer quantity, TypeProduct typeProduct,  BigDecimal price, TypeStatus typeStatus, LocalDateTime dateRegister) {
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.typeProduct = typeProduct;
-        this.price = price;
-        this.typeStatus = typeStatus;
-        this.dateRegister = dateRegister;
+    public void mergeQuantity(Integer remove) {
+        this.quantity = this.quantity - remove;
+    }
+
+    public boolean hasStorage() {
+        return this.quantity > 0;
     }
 
     public void updateFrom(ProductEditFormDto productFormEditDto) {
@@ -96,13 +93,5 @@ public class ProductRepositoryDb {
         this.typeProduct = productFormEditDto.getTypeProduct();
         this.price = productFormEditDto.getPrice();
         this.typeStatus = productFormEditDto.getTypeStatus();
-    }
-
-    public void mergeQuantity(Integer remove) {
-        this.quantity = this.quantity - remove;
-    }
-
-    public boolean hasStorage() {
-        return this.quantity > 0;
     }
 }

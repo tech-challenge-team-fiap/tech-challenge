@@ -1,15 +1,11 @@
 package br.com.fiap.techchallenge.infrastructure.webhook;
 
-import br.com.fiap.techchallenge.adapter.driven.entities.useCase.order.UpdateOrderUseCase;
 import br.com.fiap.techchallenge.common.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
