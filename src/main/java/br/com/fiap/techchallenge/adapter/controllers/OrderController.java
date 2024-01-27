@@ -3,25 +3,14 @@ package br.com.fiap.techchallenge.adapter.controllers;
 import static br.com.fiap.techchallenge.domain.utils.ProblemAware.problemOf;
 
 import br.com.fiap.techchallenge.application.dto.order.OrderFormDto;
-import br.com.fiap.techchallenge.application.dto.order.OrderListDto;
-import br.com.fiap.techchallenge.application.dto.order.OrderResultFormDto;
-import br.com.fiap.techchallenge.domain.exception.order.InvalidOrderProcessException;
 import br.com.fiap.techchallenge.domain.exception.order.OrderNotFoundException;
 import br.com.fiap.techchallenge.domain.interfaces.OrderUseCaseInterface;
-import br.com.fiap.techchallenge.useCase.order.RegisterNewOrderUseCase;
-import br.com.fiap.techchallenge.useCase.order.UpdateOrderUseCase;
 import br.com.fiap.techchallenge.domain.exception.InvalidProcessException;
-import br.com.fiap.techchallenge.external.infrastructure.gateway.OrderGatewayImpl;
-import br.com.fiap.techchallenge.external.infrastructure.entities.OrderDB;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.transaction.Transactional;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class OrderController {
