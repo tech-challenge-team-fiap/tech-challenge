@@ -1,0 +1,67 @@
+package br.com.fiap.techchallenge.adapter.controllers;
+
+import static br.com.fiap.techchallenge.domain.utils.ProblemAware.problemOf;
+
+import br.com.fiap.techchallenge.application.dto.order.OrderFormDto;
+import br.com.fiap.techchallenge.application.dto.order.OrderListDto;
+import br.com.fiap.techchallenge.application.dto.order.OrderResultFormDto;
+import br.com.fiap.techchallenge.domain.exception.order.InvalidOrderProcessException;
+import br.com.fiap.techchallenge.domain.exception.order.OrderNotFoundException;
+import br.com.fiap.techchallenge.domain.interfaces.OrderUseCaseInterface;
+import br.com.fiap.techchallenge.useCase.order.RegisterNewOrderUseCase;
+import br.com.fiap.techchallenge.useCase.order.UpdateOrderUseCase;
+import br.com.fiap.techchallenge.domain.exception.InvalidProcessException;
+import br.com.fiap.techchallenge.external.infrastructure.gateway.OrderGatewayImpl;
+import br.com.fiap.techchallenge.external.infrastructure.entities.OrderDB;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.transaction.Transactional;
+import jakarta.websocket.server.PathParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+public class OrderController {
+
+    private final OrderUseCaseInterface orderUseCase;
+
+    @Autowired
+    public OrderController(OrderUseCaseInterface orderUseCaseInterface){
+        this.orderUseCase = orderUseCaseInterface;
+    }
+    public ResponseEntity<?> register(@RequestBody OrderFormDto orderFormDto) {
+        try {
+            return ResponseEntity.ok(orderUseCase.register(orderFormDto));
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
+    }
+
+    public ResponseEntity<?> update(@PathParam("numberOrder") String numberOrder, @PathParam("status") String status) {
+        try {
+            return ResponseEntity.ok(orderUseCase.update(numberOrder, status));
+        } catch (InvalidProcessException ex) {
+            return ResponseEntity.badRequest().body(problemOf(ex));
+        }
+    }
+
+    public ResponseEntity<?> findAll(@PathVariable("status") String status) {
+        return ResponseEntity.ok(orderUseCase.findAll(status));
+    }
+
+    public ResponseEntity<?> checkStatusPayments(@PathVariable("numberOrder") String numberOrder) throws OrderNotFoundException {
+        return ResponseEntity.ok(orderUseCase.checkStatusPayments(numberOrder));
+    }
+
+    public ResponseEntity<?> getByStatusPayments(@PathVariable("payment") boolean isPayments){
+        return ResponseEntity.ok(orderUseCase.getByStatusPayments(isPayments));
+    }
+
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(orderUseCase.findAll());
+    }
+
+}
