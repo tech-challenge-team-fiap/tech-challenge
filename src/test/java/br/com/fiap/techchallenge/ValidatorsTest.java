@@ -1,8 +1,8 @@
 package br.com.fiap.techchallenge;
 
-import br.com.fiap.techchallenge.common.validation.CpfValidator;
-import br.com.fiap.techchallenge.common.validation.EmailValidator;
-import br.com.fiap.techchallenge.common.validation.PhoneNumberValidator;
+import br.com.fiap.techchallenge.domain.validation.CpfValidator;
+import br.com.fiap.techchallenge.domain.validation.EmailValidator;
+import br.com.fiap.techchallenge.domain.validation.PhoneNumberValidator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
