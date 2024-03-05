@@ -15,7 +15,7 @@ jobs:
       with: 
         fetch-depth: 0
         
-    - run: mvn test
+    - run: sudo mvn test
     - name: Generate JaCoCo Badge
       id: jacoco
       uses: cicirello/jacoco-badge-generator@v2.0.1
@@ -39,7 +39,7 @@ jobs:
         fetch-depth: 0
 
     - name: Build project with Maven
-      run: mvn package
+      run: sudo mvn package
   
   # publish:
   #   runs-on: ubuntu-latest
