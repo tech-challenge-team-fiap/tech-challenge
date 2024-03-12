@@ -44,3 +44,36 @@ jobs:
       # - name: Build and Deploy SAM
       #   env: 
       #     PROD_AWS_REGION: us-east-2
+      #     SAM_TEMPLATE: template.yaml
+      #     
+  # deploy-prod:
+  #   if: github.ref == 'refs/heads/main'
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: aws-actions/setup-sam@v2
+  #       with:
+  #         use-installer: true
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #          name: packaged-prod.yaml
+    
+  #     - name: Assume the prod pipeline user role
+  #       uses: aws-actions/configure-aws-credentials@v1-node16
+  #       with:
+  #         aws-region: ${{ env.PROD_REGION }}
+  #         role-to-assume: ${{ env.PROD_PIPELINE_EXECUTION_ROLE }}
+  #         role-session-name: prod-deployment
+  #         role-duration-seconds: 3600
+  #         role-skip-session-tagging: true
+    
+  #     - name: Deploy to production account
+  #       run: |
+  #         sam deploy --stack-name ${PROD_STACK_NAME} \
+  #         --template packaged-prod.yaml \
+  #         --capabilities CAPABILITY_IAM \
+  #         --region ${PROD_REGION} \
+  #         --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
+  #         --no-fail-on-empty-changeset \
+  #         --role-arn ${PROD_CLOUDFORMATION_EXECUTION_ROLE}
