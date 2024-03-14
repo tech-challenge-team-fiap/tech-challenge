@@ -75,6 +75,8 @@ CREATE TABLE `PRODUCT` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available product';
 
+teste
+
 
 
 
