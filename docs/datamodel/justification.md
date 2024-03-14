@@ -7,5 +7,5 @@ As we enter Phase 3, the project is evolving towards a transition to a microserv
 The transition to AWS RDS carries a low risk of failures and a significant gain in high availability, automatic scalability, and ease of integration with other AWS ecosystem services that will be used by the project.
 
 ## Entity Relationship Model
-<img src="/docs/datamodel/ER-entityrelationshipmodel.png">
+![image](/docs/datamodel/ER-entityrelationshipmodel.png)
 
