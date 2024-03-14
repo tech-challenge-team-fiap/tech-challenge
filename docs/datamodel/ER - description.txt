@@ -1,0 +1,82 @@
+-- `tech-challenge-db`.CLIENT definition
+
+CREATE TABLE `CLIENT` (
+  `ID` char(36) NOT NULL COMMENT 'Identifies the given client',
+  `NAME` varchar(256) NOT NULL COMMENT 'The client name',
+  `CPF` varchar(14) NOT NULL COMMENT 'The client cpf as a natural id',
+  `EMAIL` varchar(256) NOT NULL COMMENT 'The client email',
+  `PHONE` varchar(15) NOT NULL COMMENT 'The client phone number',
+  `DATE_REGISTER` datetime(6) NOT NULL COMMENT 'When the client was created within the system',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `CLIENT_CPF_IDX` (`CPF`)
+) ENGINE=InnoDB DEFAULT CHARSET=u
+
+-- `tech-challenge-db`.CLIENT_ORDER definition
+
+CREATE TABLE `CLIENT_ORDER` (
+  `ID` char(36) NOT NULL COMMENT 'Identifies the given order',
+  `CLIENT_ID` char(36) DEFAULT NULL COMMENT 'The client order identification',
+  `ORDER_NUMBER` varchar(256) NOT NULL COMMENT 'The order number',
+  `DATE` date NOT NULL COMMENT 'The order date',
+  `ORDER_STATUS` varchar(64) NOT NULL COMMENT 'The order status',
+  `TOTAL` decimal(10,2) NOT NULL COMMENT 'The order value total',
+  `PAYMENT_TYPE` varchar(64) NOT NULL COMMENT 'The order payment type',
+  `PAYMENT_ID` char(36) NOT NULL COMMENT 'The order payment id reference',
+  `DATE_DELIVERED` datetime(6) DEFAULT NULL COMMENT 'The order date delivered',
+  `UPDATED_AT` datetime(6) NOT NULL COMMENT 'The order last updated',
+  PRIMARY KEY (`ID`),
+  KEY `ORDER_CLIENT_FK` (`CLIENT_ID`),
+  CONSTRAINT `ORDER_CLIENT_FK` FOREIGN KEY (`CLIENT_ID`) REFERENCES `CLIENT` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available order';
+
+-- `tech-challenge-db`.NOTIFICATION definition
+
+CREATE TABLE `NOTIFICATION` (
+  `ID` char(36) NOT NULL COMMENT 'Identifies the given order',
+  `ORDER_NUMBER` varchar(256) NOT NULL COMMENT 'The order number identifies notification',
+  `MESSAGE` varchar(256) NOT NULL COMMENT 'The notification message',
+  `ORDER_STATUS` varchar(64) NOT NULL COMMENT 'The order status',
+  `DATE_REGISTER` datetime(6) NOT NULL COMMENT 'The order date delivered',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available notification';
+
+-- `tech-challenge-db`.ORDER_PRODUCT definition
+
+CREATE TABLE `ORDER_PRODUCT` (
+  `ORDER_ID` char(36) NOT NULL COMMENT 'Identifies the given order',
+  `PRODUCT_ID` char(36) NOT NULL COMMENT 'Identifies the given product',
+  KEY `ORDER_PRODUCT_ORDER_FK` (`ORDER_ID`),
+  KEY `ORDER_PRODUCT_PRODUCT_FK` (`PRODUCT_ID`),
+  CONSTRAINT `ORDER_PRODUCT_ORDER_FK` FOREIGN KEY (`ORDER_ID`) REFERENCES `CLIENT_ORDER` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `ORDER_PRODUCT_PRODUCT_FK` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `PRODUCT` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available order product';
+
+-- `tech-challenge-db`.ORDER_QUEUE definition
+
+CREATE TABLE `ORDER_QUEUE` (
+  `ID` char(36) NOT NULL COMMENT 'Identifies the given order',
+  `ORDER_NUMBER` varchar(256) NOT NULL COMMENT 'The order number identifies notification',
+  `ORDER_STATUS` varchar(64) NOT NULL COMMENT 'The order status',
+  `DATE_REGISTER` datetime(6) NOT NULL COMMENT 'The order date delivered',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available order queue';
+
+-- `tech-challenge-db`.PRODUCT definition
+
+CREATE TABLE `PRODUCT` (
+  `ID` char(36) NOT NULL COMMENT 'Identifies the given product',
+  `NAME` varchar(256) NOT NULL COMMENT 'The product name',
+  `DESCRIPTION` varchar(256) NOT NULL COMMENT 'The product description',
+  `QUANTITY` bigint NOT NULL COMMENT 'The product quantity',
+  `TYPE_PRODUCT` varchar(64) NOT NULL COMMENT 'The product type',
+  `PRICE` decimal(10,2) NOT NULL COMMENT 'The product price',
+  `TYPE_STATUS` varchar(64) NOT NULL COMMENT 'The product status',
+  `DATE_REGISTER` datetime(6) NOT NULL COMMENT 'When the product was created within the system',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Holds the available product';
+
+
+
+
+
+
